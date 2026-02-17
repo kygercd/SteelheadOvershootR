@@ -1,0 +1,11 @@
+Diagnostic,Result,Assessment
+Downstream Year Calibration,17/17 years in CI,Good
+Tributary Year Calibration,17/17 years in CI,Good
+Sensitivity: Downstream Spill,Range: 0.088,Robust
+Sensitivity: Downstream Harvest,Range: 0.082,Robust
+Sensitivity: Tributary Spill,Range: 0.280,Robust
+Sensitivity: Tributary Harvest,Range: 0.299,Robust
+R-hat (fixed effects),"[0.9998, 1.0005]",Good
+ESS (fixed effects),"[11914, 14842]",Good
+Divergent transitions,0,Good
+LOO Pareto k > 0.7,0 / 208,Good
