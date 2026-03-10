@@ -57,6 +57,18 @@ overshoot_df <- overshoot_df %>%
   mutate(FirstWellsDate = as_datetime(FirstWellsDate),
          WellsYear = year(FirstWellsDate))
 
+# Load and apply censored tag codes
+censored_tags <- read_csv("SteelheadOvershootCensoredTags.csv",
+                          col_names = "TagCode", show_col_types = FALSE) %>%
+  filter(!is.na(TagCode), TagCode != "") %>%
+  pull(TagCode)
+
+cat(sprintf("Censored tag codes to exclude: %d\n", length(censored_tags)))
+n_before <- nrow(overshoot_df)
+overshoot_df <- overshoot_df %>% filter(!TagCode %in% censored_tags)
+cat(sprintf("Fish removed due to censoring: %d\n", n_before - nrow(overshoot_df)))
+cat(sprintf("Fish remaining after censoring: %d\n", nrow(overshoot_df)))
+
 # Load rear type data
 rear_type_df <- read_csv("OvershootRearType.csv", show_col_types = FALSE) %>%
   rename(TagCode = `Tag Code`) %>%
