@@ -86,22 +86,22 @@ predict_p_enl_at_date <- function(entry_date, return_year) {
 # Pre-compute year x season mean p_enl (for upstream-only fish)
 # Predicts at the mean log-discharge for each year x season combination
 cat("Computing year x season mean p_enl lookup...\n")
-season_means <- flow_enl %>%
+season_agg <- flow_enl %>%
   filter(!is.na(discharge)) %>%
-  mutate(yr       = year(date),
-         season   = if_else(month(date) %in% 1:6, "spring", "fall"),
-         lq_s     = (log(discharge) - enl_logq_mean) / enl_logq_sd,
-         yr_c     = yr - enl_base_year) %>%
+  mutate(yr     = year(date),
+         season = if_else(month(date) %in% 1:6, "spring", "fall"),
+         lq_s   = (log(discharge) - enl_logq_mean) / enl_logq_sd,
+         yr_c   = yr - enl_base_year) %>%
   group_by(yr, season) %>%
-  summarise(mean_lq_s = mean(lq_s), yr_c = first(yr_c), .groups = "drop") %>%
-  rowwise() %>%
-  mutate(mean_p_enl = mean(posterior_epred(
-    fit_enl,
-    newdata = data.frame(log_q_s  = mean_lq_s,
-                         log_q2_s = mean_lq_s^2,
-                         year     = yr_c),
-    allow_new_levels = TRUE, sample_new_levels = "gaussian"))) %>%
-  ungroup()
+  summarise(mean_lq_s = mean(lq_s), yr_c = first(yr_c), .groups = "drop")
+
+nd_season <- data.frame(log_q_s  = season_agg$mean_lq_s,
+                        log_q2_s = season_agg$mean_lq_s^2,
+                        year     = season_agg$yr_c)
+pred_season <- posterior_epred(fit_enl, newdata = nd_season,
+                               allow_new_levels = TRUE, sample_new_levels = "gaussian")
+season_means <- season_agg %>% mutate(mean_p_enl = colMeans(pred_season))
+rm(pred_season, nd_season, season_agg); gc()
 
 # Fallback: overall season mean across all years
 overall_spring_p <- mean(season_means$mean_p_enl[season_means$season == "spring"])

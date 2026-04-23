@@ -88,13 +88,17 @@ reclassify_results <- map_dfr(fish_clean$TagCode, function(tc) {
   anchor  <- as_datetime(fm$rrf_anchor)
   win_end <- anchor %m+% months(18)
 
-  # Find first post-anchor Entiat detection (any Entiat site)
-  first_ent <- dets %>%
-    filter(site %in% entiat_sites, first_dt > anchor) %>%
-    slice_min(first_dt, n = 1)
+  # All Entiat detections within the 18-month window
+  enl_in <- dets %>% filter(site == "ENL - Lower Entiat River",
+                              first_dt > anchor, first_dt <= win_end)
+  up_in  <- dets %>% filter(site %in% entiat_upstream,
+                              first_dt > anchor, first_dt <= win_end)
 
-  if (nrow(first_ent) == 0) {
-    # Never detected in Entiat — fall, outcome 0
+  has_enl      <- nrow(enl_in) > 0
+  has_upstream <- nrow(up_in)  > 0
+
+  # Never detected in Entiat
+  if (!has_enl && !has_upstream) {
     return(tibble(TagCode = tc,
                   spring_return_r   = 0L,
                   EntiatSpawned_r   = 0L,
@@ -103,39 +107,49 @@ reclassify_results <- map_dfr(fish_clean$TagCode, function(tc) {
                   reclassified      = FALSE))
   }
 
-  entry_mon       <- month(first_ent$first_dt)
-  is_spring_entry <- entry_mon %in% 1:6
+  # Spring ENL: detected at ENL in Jan–Jun
+  spring_enl <- has_enl && any(month(enl_in$first_dt) %in% 1:6)
+  # Spring upstream: detected upstream in Jan–Jun
+  spring_up  <- has_upstream && any(month(up_in$first_dt) %in% 1:6)
 
-  if (!is_spring_entry) {
-    # Fall entry
-    # Group B: any Entiat detection = successful return — these fish already
-    #   navigated back past Wells Dam, so ENL detection alone is sufficient.
-    # Group A: strict fall criterion (ENL + ≥1 upstream site required)
-    spawned_fall <- if (fm$group == "B") 1L else fm$EntiatSpawned
-    return(tibble(TagCode = tc,
-                  spring_return_r   = 0L,
-                  EntiatSpawned_r   = spawned_fall,
-                  p_enl_r           = fm$p_enl_corrected,
-                  entiat_entry_date = as.Date(first_ent$first_dt),
-                  reclassified      = FALSE))
+  # A fish is a SPRING MIGRANT if it has ANY spring Entiat detection (ENL or
+  # upstream). Most fish enter ENL in fall, overwinter, and spawn in spring.
+  # Only fish with exclusively fall detections and no upstream confirmation
+  # are treated as fall fish.
+  is_spring_migrant <- spring_enl || spring_up
+
+  # Success criterion:
+  # Group A: upstream detection (any season) OR spring ENL = success.
+  #          Fall ENL only (no upstream, no spring return) = failure.
+  # Group B: any Entiat detection = success (these fish already navigated
+  #          back past Wells Dam to reach the Entiat).
+  if (fm$group == "B") {
+    spawned_r <- 1L
+  } else {
+    spawned_r <- as.integer(has_upstream | spring_enl)
   }
 
-  # Spring entry: apply spring criterion (ENL within window is sufficient)
-  enl_in    <- dets %>% filter(site == "ENL - Lower Entiat River",
-                                first_dt > anchor, first_dt <= win_end)
-  spawned_r <- as.integer(nrow(enl_in) > 0)
+  # p_enl: use spring ENL date when available (best estimate of efficiency
+  # during actual spawning migration); otherwise fall ENL; otherwise first
+  # upstream date as a proxy for when the fish crossed ENL undetected.
+  if (spring_enl) {
+    spring_enl_dts <- enl_in$first_dt[month(enl_in$first_dt) %in% 1:6]
+    ref_date <- as.Date(min(spring_enl_dts))
+  } else if (has_enl) {
+    ref_date <- as.Date(min(enl_in$first_dt))
+  } else {
+    ref_date <- as.Date(min(up_in$first_dt))
+  }
 
-  # Recompute p_enl at actual spring entry date
-  entry_date <- as.Date(first_ent$first_dt)
-  p_enl_new  <- predict_p_enl_at_date(entry_date, fm$ReturnYear)
-  if (is.na(p_enl_new)) p_enl_new <- fm$p_enl_corrected   # fallback to entry-date corrected value
+  p_enl_new <- predict_p_enl_at_date(ref_date, fm$ReturnYear)
+  if (is.na(p_enl_new)) p_enl_new <- fm$p_enl_corrected
 
   tibble(TagCode = tc,
-         spring_return_r   = 1L,
+         spring_return_r   = as.integer(is_spring_migrant),
          EntiatSpawned_r   = spawned_r,
          p_enl_r           = p_enl_new,
-         entiat_entry_date = entry_date,
-         reclassified      = TRUE)
+         entiat_entry_date = ref_date,
+         reclassified      = is_spring_migrant)
 })
 
 cat(sprintf("Fish reclassified as spring entry: %d total (Group A: %d, Group B: %d)\n",

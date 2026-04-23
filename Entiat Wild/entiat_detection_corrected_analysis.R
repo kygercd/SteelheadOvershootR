@@ -87,6 +87,23 @@ gc()
 fish_df <- fish_df %>% mutate(rrf_anchor = as_datetime(rrf_anchor))
 
 # ---- ENL detection efficiency helpers ----------------------------------------
+entiat_upstream <- c("ENM - Middle Entiat River",
+                     "ENA - Upper Entiat River at rkm 17.1",
+                     "ENF - Upper Entiat River at rkm 40.6",
+                     "ENS - Upper Entiat River at rkm 35.7",
+                     "EHL - Entiat NFH Adult Ladder",
+                     "MAD - Mad River, Entiat River Basin",
+                     "UMR - Upper Mad Rv. Temporary Array",
+                     "SR1 - Top of Entiat R side channel",
+                     "SR2 - Bot of Entiat R side channel",
+                     "HS1 - Top of side channel near ENFH",
+                     "HS2 - Bottom side channel near ENFH",
+                     "HN1 - Top of Harrison side channel",
+                     "HN2 - Middle Harrison Side Channel",
+                     "HN3 - Bottom Harrison Side Channel",
+                     "TLT - Tillicum Creek Temporary Array",
+                     "RCT - Roaring Creek Temporary Array",
+                     "URT - Upper Roaring Temporary Array")
 entiat_all_sites <- c("ENL - Lower Entiat River","ENM - Middle Entiat River",
                       "ENA - Upper Entiat River at rkm 17.1",
                       "ENF - Upper Entiat River at rkm 40.6",
@@ -163,10 +180,19 @@ fish_entry_meta <- map_dfr(fish_df$TagCode, function(tc) {
   fm     <- fish_df  %>% filter(TagCode == tc)
   dets   <- raw_main %>% filter(tag == tc) %>% arrange(first_dt)
   anchor <- as_datetime(fm$rrf_anchor)
-  ent_dets <- dets %>% filter(site %in% entiat_all_sites, first_dt > anchor)
 
-  if (nrow(ent_dets) > 0) {
-    entry_date  <- as.Date(min(ent_dets$first_dt))
+  # p_enl should reflect the flow conditions when the fish was at ENL.
+  # Priority: (1) first ENL detection date, (2) first upstream detection date
+  # as a proxy (fish crossed ENL undetected), (3) anchor date fallback.
+  enl_dets <- dets %>% filter(site == "ENL - Lower Entiat River", first_dt > anchor)
+  up_dets  <- dets %>% filter(site %in% entiat_upstream, first_dt > anchor)
+
+  if (nrow(enl_dets) > 0) {
+    entry_date  <- as.Date(min(enl_dets$first_dt))
+    entry_month <- month(entry_date)
+    has_date    <- TRUE
+  } else if (nrow(up_dets) > 0) {
+    entry_date  <- as.Date(min(up_dets$first_dt))
     entry_month <- month(entry_date)
     has_date    <- TRUE
   } else {
