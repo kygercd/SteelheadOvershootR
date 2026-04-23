@@ -2,6 +2,11 @@
 .Rhistory
 .RData
 .Rproj.user/
+*.RData
+*.rds
+
+# LibreOffice lock files
+.~lock.*
 
 # OS files
 .DS_Store

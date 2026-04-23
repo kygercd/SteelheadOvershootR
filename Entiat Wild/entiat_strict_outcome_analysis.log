@@ -1,0 +1,422 @@
+======================================================================
+STRICT OUTCOME: EntiatSpawned
+Fall = ENL + upstream (in-window); Spring = ENL only (in-window)
+======================================================================
+
+Overall:
+# A tibble: 2 × 7
+  group     n  orig orig_pct spawned spawned_pct dropped
+  <chr> <int> <dbl>    <dbl>   <int>       <dbl>   <dbl>
+1 A       223   200     89.7     132        59.2      68
+2 B       181   123     68.0      86        47.5      37
+
+By group × season:
+# A tibble: 3 × 5
+  group ReturnSeason     n spawned   pct
+  <chr> <chr>        <int>   <int> <dbl>
+1 A     Fall           214     126  58.9
+2 A     Spring           9       6  66.7
+3 B     Fall           181      86  47.5
+
+Raw log-odds differences:
+  Fall: A=58.9% (n=214), B=47.5% (n=181), diff=-11.4 pp, log-odds diff=-0.458
+  Spring: A=66.7% (n=9), B=NaN% (n=0), diff=NaN pp, log-odds diff=NaN
+
+======================================================================
+MODEL S1: Standard Bayesian — EntiatSpawned ~ wells + harvest + (1|year)
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000151 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.51 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000211 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 2.11 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.00022 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 2.2 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000212 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 2.12 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 2.247 seconds (Warm-up)
+Chain 1:                3.92 seconds (Sampling)
+Chain 1:                6.167 seconds (Total)
+Chain 1: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 2.437 seconds (Warm-up)
+Chain 4:                3.824 seconds (Sampling)
+Chain 4:                6.261 seconds (Total)
+Chain 4: 
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 2.412 seconds (Warm-up)
+Chain 2:                3.969 seconds (Sampling)
+Chain 2:                6.381 seconds (Total)
+Chain 2: 
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 2.373 seconds (Warm-up)
+Chain 3:                4.004 seconds (Sampling)
+Chain 3:                6.377 seconds (Total)
+Chain 3: 
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatSpawned ~ wells_interaction + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.55      0.20     0.20     1.00 1.00     3855     3483
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             0.85      0.35     0.15     1.56 1.00    10974     9365
+wells_interaction    -0.56      0.21    -0.97    -0.15 1.00    19551     9351
+harvest_open         -0.60      0.40    -1.41     0.16 1.00     7885     7828
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+Wells effect: beta=-0.563, OR=0.570, 95% CI [-0.975, -0.153], P(<0)=0.9966
+
+======================================================================
+MODEL S2: Detection-corrected — EntiatSpawned | vreal(p_enl)
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000474 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 4.74 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000467 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 4.67 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000495 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 4.95 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000491 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 4.91 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 4.975 seconds (Warm-up)
+Chain 1:                8.446 seconds (Sampling)
+Chain 1:                13.421 seconds (Total)
+Chain 1: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 5.331 seconds (Warm-up)
+Chain 4:                8.543 seconds (Sampling)
+Chain 4:                13.874 seconds (Total)
+Chain 4: 
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 5.404 seconds (Warm-up)
+Chain 2:                8.596 seconds (Sampling)
+Chain 2:                14 seconds (Total)
+Chain 2: 
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 5.09 seconds (Warm-up)
+Chain 3:                12.321 seconds (Sampling)
+Chain 3:                17.411 seconds (Total)
+Chain 3: 
+Warning message:
+Rows containing NAs were excluded from the model. 
+ Family: det_corrected 
+  Links: mu = logit 
+Formula: EntiatSpawned | vreal(p_enl_safe) ~ wells_interaction + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish (Number of observations: 395) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.65      0.25     0.23     1.22 1.00     4652     4523
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             1.77      0.50     0.86     2.84 1.00    12498     8517
+wells_interaction    -0.68      0.26    -1.20    -0.18 1.00    17793     9256
+harvest_open         -1.03      0.54    -2.13    -0.01 1.00     9154     9047
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+Wells effect: beta=-0.683, OR=0.505, 95% CI [-1.199, -0.181], P(<0)=0.9948
+
+======================================================================
+MODEL S3: Season interaction — EntiatSpawned ~ wells * season + harvest
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000179 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 1.79 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000218 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 2.18 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000229 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 2.29 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000229 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 2.29 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 2.424 seconds (Warm-up)
+Chain 2:                3.759 seconds (Sampling)
+Chain 2:                6.183 seconds (Total)
+Chain 2: 
+Chain 1: 
+Chain 1:  Elapsed Time: 2.268 seconds (Warm-up)
+Chain 1:                3.954 seconds (Sampling)
+Chain 1:                6.222 seconds (Total)
+Chain 1: 
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 2.868 seconds (Warm-up)
+Chain 3:                4.352 seconds (Sampling)
+Chain 3:                7.22 seconds (Total)
+Chain 3: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 3.293 seconds (Warm-up)
+Chain 4:                3.963 seconds (Sampling)
+Chain 4:                7.256 seconds (Total)
+Chain 4: 
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatSpawned ~ wells_interaction * spring_return + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.56      0.20     0.21     1.01 1.00     4321     4991
+
+Regression Coefficients:
+                                Estimate Est.Error l-95% CI u-95% CI Rhat
+Intercept                           0.85      0.37     0.12     1.58 1.00
+wells_interaction                  -0.57      0.21    -0.98    -0.15 1.00
+spring_return                       0.01      0.70    -1.35     1.41 1.00
+harvest_open                       -0.60      0.41    -1.44     0.20 1.00
+wells_interaction:spring_return     0.00      1.49    -2.94     2.94 1.00
+                                Bulk_ESS Tail_ESS
+Intercept                          10037     8995
+wells_interaction                  17531     8535
+spring_return                      17072     8762
+harvest_open                        7124     7066
+wells_interaction:spring_return    16364     8955
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+Wells FALL:   beta=-0.567, OR=0.567, 95% CI [-0.982, -0.150], P(<0)=0.9966
+Wells SPRING: beta=-0.565, OR=0.568, 95% CI [-3.536, 2.407], P(<0)=0.6492
+Interaction:  beta=0.002, 95% CI [-2.940, 2.941], P(>0)=0.5030
+
+======================================================================
+MODEL COMPARISON: Original EntiatDetected vs Strict EntiatSpawned
+======================================================================
+# A tibble: 4 × 7
+  Outcome          Model                      Beta    OR CI_low CI_high P_neg
+  <chr>            <chr>                     <dbl> <dbl>  <dbl>   <dbl> <dbl>
+1 Original (ENL)   Standard (Model 1)       -0.642 0.526 -1.09   -0.21  0.997
+2 Original (ENL)   Det-corrected (Model 1c) -1.84  0.16  -2.74   -1.07  1    
+3 Strict (spawned) Standard (S1)            -0.563 0.57  -0.975  -0.153 0.997
+4 Strict (spawned) Det-corrected (S2)       -0.683 0.505 -1.20   -0.181 0.995
+
+Saved: entiat_strict_outcome_models.RData
+Saved: entiat_strict_outcome_comparison.csv
+
+======================================================================
+ANALYSIS COMPLETE
+======================================================================

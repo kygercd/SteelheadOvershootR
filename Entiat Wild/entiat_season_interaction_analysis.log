@@ -1,0 +1,377 @@
+Loading required package: Rcpp
+Loading 'brms' package (version 2.23.0). Useful instructions
+can be found by typing help('brms'). A more detailed introduction
+to the package is available through vignette('brms_overview').
+
+Attaching package: ‘brms’
+
+The following object is masked from ‘package:stats’:
+
+    ar
+
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+This is posterior version 1.6.1
+
+Attaching package: ‘posterior’
+
+The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+The following objects are masked from ‘package:base’:
+
+    %in%, match
+
+
+Attaching package: ‘tidybayes’
+
+The following objects are masked from ‘package:brms’:
+
+    dstudent_t, pstudent_t, qstudent_t, rstudent_t
+
+======================================================================
+SEASON × WELLS INTERACTION ANALYSIS
+======================================================================
+
+n = 379 fish (Group A: 239, Group B: 140)
+
+--- Group × Season Detection Rates ---
+# A tibble: 4 × 7
+  group Season               n n_detected   pct  lo95  hi95
+  <chr> <chr>            <int>      <dbl> <dbl> <dbl> <dbl>
+1 A     Fall (Jul-Dec)     204        151  74    67.6  79.5
+2 A     Spring (Jan-May)    35         24  68.6  52    81.5
+3 B     Fall (Jul-Dec)     123         71  57.7  48.9  66.1
+4 B     Spring (Jan-May)    17         11  64.7  41.3  82.7
+
+Wells effect by season (raw):
+  Fall gap:   Group A 74.0% vs Group B 57.7% = -16.3 pp
+  Spring gap: Group A 68.6% vs Group B 64.7% = -3.9 pp
+
+  Fall Wells effect (log-odds):   -0.735
+  Spring Wells effect (log-odds): -0.176
+  Interaction estimate (naive):   0.560
+
+======================================================================
+MODEL 1e: Standard — Wells × Season Interaction
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000233 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.33 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000331 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.31 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000242 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 2.42 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000428 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 4.28 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 3.017 seconds (Warm-up)
+Chain 1:                4.221 seconds (Sampling)
+Chain 1:                7.238 seconds (Total)
+Chain 1: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 2.907 seconds (Warm-up)
+Chain 4:                4.509 seconds (Sampling)
+Chain 4:                7.416 seconds (Total)
+Chain 4: 
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 3.823 seconds (Warm-up)
+Chain 3:                4.966 seconds (Sampling)
+Chain 3:                8.789 seconds (Total)
+Chain 3: 
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 3.548 seconds (Warm-up)
+Chain 2:                6.555 seconds (Sampling)
+Chain 2:                10.103 seconds (Total)
+Chain 2: 
+
+Model 1e Summary:
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatDetected ~ wells_interaction * spring_return + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish (Number of observations: 379) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.34      0.24     0.02     0.89 1.00     2749     4563
+
+Regression Coefficients:
+                                Estimate Est.Error l-95% CI u-95% CI Rhat
+Intercept                           1.26      0.40     0.49     2.08 1.00
+wells_interaction                  -0.70      0.24    -1.17    -0.24 1.00
+spring_return                      -0.17      0.37    -0.89     0.54 1.00
+harvest_open                       -0.26      0.40    -1.08     0.53 1.00
+wells_interaction:spring_return     0.45      0.56    -0.65     1.54 1.00
+                                Bulk_ESS Tail_ESS
+Intercept                          10585     8160
+wells_interaction                  13156     9357
+spring_return                      11700     9523
+harvest_open                        9818     8189
+wells_interaction:spring_return     9977     9372
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1e Key Results ---
+Wells effect in FALL (reference):
+  beta = -0.701, OR = 0.496, 95% CI [-1.168, -0.236], P(<0) = 0.9979
+
+Wells effect in SPRING (fall + interaction):
+  beta = -0.247, OR = 0.781, 95% CI [-1.307, 0.819], P(<0) = 0.6778
+
+Interaction term (spring vs fall difference in Wells effect):
+  beta = 0.454, 95% CI [-0.655, 1.540]
+  P(interaction > 0) = 0.7901  [i.e. P(Wells effect smaller in spring)]
+
+Predicted return probabilities (population-level):
+  Group A Fall:   73.5% [65.7, 80.6]
+  Group A Spring: 69.7% [53.8, 83.0]
+  Group B Fall:   58.0% [47.3, 68.1]
+  Group B Spring: 64.1% [41.6, 83.1]
+
+Diagnostics: Rhat [1.000, 1.000], ESS [9818, 13156]
+
+======================================================================
+MODEL 1f: Detection-Corrected — Wells × Season Interaction
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000351 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.51 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000347 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.47 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000383 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 3.83 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000404 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 4.04 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 6.561 seconds (Warm-up)
+Chain 2:                11.522 seconds (Sampling)
+Chain 2:                18.083 seconds (Total)
+Chain 2: 
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 8.341 seconds (Warm-up)
+Chain 3:                11.168 seconds (Sampling)
+Chain 3:                19.509 seconds (Total)
+Chain 3: 
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 8.081 seconds (Warm-up)
+Chain 1:                14.478 seconds (Sampling)
+Chain 1:                22.559 seconds (Total)
+Chain 1: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 8.244 seconds (Warm-up)
+Chain 4:                15.058 seconds (Sampling)
+Chain 4:                23.302 seconds (Total)
+Chain 4: 
+
+Model 1f Summary:
+ Family: det_corrected 
+  Links: mu = logit 
+Formula: EntiatDetected | vreal(p_enl_safe) ~ wells_interaction * spring_return + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish (Number of observations: 379) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.55      0.30     0.06     1.22 1.00     3295     3996
+
+Regression Coefficients:
+                                Estimate Est.Error l-95% CI u-95% CI Rhat
+Intercept                           2.94      0.71     1.66     4.42 1.00
+wells_interaction                  -0.88      0.30    -1.48    -0.30 1.00
+spring_return                      -0.33      0.42    -1.14     0.54 1.00
+harvest_open                       -1.36      0.70    -2.80    -0.05 1.00
+wells_interaction:spring_return     0.53      0.59    -0.62     1.69 1.00
+                                Bulk_ESS Tail_ESS
+Intercept                          14617     9009
+wells_interaction                  14153     9171
+spring_return                      11939     9395
+harvest_open                       13767     9165
+wells_interaction:spring_return    11705     9854
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1f Key Results (Detection-Corrected) ---
+Wells effect in FALL:
+  beta = -0.883, OR = 0.413, 95% CI [-1.483, -0.304], P(<0) = 0.9985
+Wells effect in SPRING:
+  beta = -0.351, OR = 0.704, 95% CI [-1.460, 0.771], P(<0) = 0.7277
+Interaction (spring vs fall):
+  beta = 0.532, 95% CI [-0.617, 1.694], P(>0) = 0.8138
+
+======================================================================
+COMPARISON: Model 1e vs 1f — Wells Effect by Season
+======================================================================
+# A tibble: 6 × 7
+  Season      Model                Beta     OR CI_low CI_high  P_neg
+  <chr>       <chr>               <dbl>  <dbl>  <dbl>   <dbl>  <dbl>
+1 Fall        Standard (1e)      -0.701  0.496 -1.17   -0.236  0.998
+2 Fall        Det-corrected (1f) -0.883  0.413 -1.48   -0.304  0.999
+3 Spring      Standard (1e)      -0.247  0.781 -1.31    0.819  0.678
+4 Spring      Det-corrected (1f) -0.351  0.704 -1.46    0.771  0.728
+5 Interaction Standard (1e)       0.454 NA     -0.655   1.54  NA    
+6 Interaction Det-corrected (1f)  0.532 NA     -0.617   1.69  NA    
+
+Saved: entiat_season_interaction_models.RData
+Saved: entiat_season_interaction_results.csv
+
+--- Generating Figures ---
+Error in ggplot(interact_df, aes(x = beta, fill = model)) + geom_density(alpha = 0.45,  : 
+  could not find function "+<-"
+Execution halted
+Saved: entiat_season_interaction.png
+`geom_smooth()` using formula = 'y ~ x'
+There were 12 warnings (use warnings() to see them)
+Saved: entiat_season_annual.png
+Figures complete.

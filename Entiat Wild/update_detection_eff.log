@@ -1,0 +1,49 @@
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+Loading required package: Rcpp
+Loading 'brms' package (version 2.23.0). Useful instructions
+can be found by typing help('brms'). A more detailed introduction
+to the package is available through vignette('brms_overview').
+
+Attaching package: ‘brms’
+
+The following object is masked from ‘package:stats’:
+
+    ar
+
+Fish needing detection efficiency computed: 2 / 404
+
+Flow lookup for new fish:
+# A tibble: 2 × 6
+  TagCode        return_year return_doy enl_q met_q oka_q
+  <chr>                <dbl>      <dbl> <dbl> <dbl> <dbl>
+1 3D9.1C2DA13E28        2016        103  2090  8580  1120
+2 3DD.0077A2A88D        2021         97   456  1490   832
+
+Predicting detection efficiencies...
+Warning message:
+There was 1 warning in `mutate()`.
+ℹ In argument: `p_enl = predict_p_enl(cur_data())`.
+ℹ In row 1.
+Caused by warning:
+! `cur_data()` was deprecated in dplyr 1.1.0.
+ℹ Please use `pick()` instead. 
+
+Predicted values:
+# A tibble: 2 × 6
+  TagCode        return_year enl_q p_enl p_lmr p_okl
+  <chr>                <dbl> <dbl> <dbl> <dbl> <dbl>
+1 3D9.1C2DA13E28        2016  2090 0.330 0.121 0.395
+2 3DD.0077A2A88D        2021   456 0.872 0.660 0.563
+
+Final detection_eff: 404 fish
+  Group A: 223  |  Group B: 181
+Saved: entiat_analysis_with_detection_eff.csv

@@ -1,0 +1,10 @@
+Description,Value
+Undetected Group B fish,51
+Expected true Entiat returners (missed at ENL),20.1
+Expected hidden Methow strays (missed at LMR),1.1
+Expected hidden Okanogan strays (missed at OKL),0.1
+Expected other/unknown fate,29.7
+Group B observed Entiat detection rate,68
+Group B corrected Entiat return rate,79.1
+Group A observed Entiat detection rate,89.7
+Group A corrected Entiat return rate,93.4

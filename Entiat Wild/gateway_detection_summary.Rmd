@@ -1,0 +1,588 @@
+---
+title: "Detection Efficiency at Methow, Okanogan, and Entiat River Gateway PIT Arrays"
+subtitle: "Wells Dam and Rocky Reach Dam Adult Steelhead — 2005 to 2025"
+date: "`r format(Sys.Date(), '%B %d, %Y')`"
+output:
+  word_document:
+    reference_docx: NULL
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE)
+library(dplyr); library(readr); library(lubridate); library(mgcv); library(knitr)
+
+col_spec <- cols(.default = col_character(), Count = col_double())
+dat <- bind_rows(
+  read_csv('WEAMetOkaSteel05-10.csv', col_types = col_spec),
+  read_csv('WEAMetOkaSteel10-15.csv', col_types = col_spec),
+  read_csv('WEAtoMetOkaSteel.csv',    col_types = col_spec)
+) %>%
+  mutate(first_time = mdy_hms(`First Time Value`),
+         site_code  = substr(`Site Name`, 1, 3))
+
+methow_sites <- c('LMR','18N','BVC','CML','CMU','CRU','CRW','CWP','EMC','EWC',
+                  'GLC','GL2','GWP','HSL','HSM','HSU','JOH','LBC','LBT','LOR',
+                  'LTP','M3R','MEM','MEW','MHB','MRB','MRC','MRT','MRU','MRW',
+                  'MSB','MSH','MTB','MTP','MVP','MWF','NMC','SCP','SSC','TWR','WFC','WHS')
+okanogan_sites <- c('OKL','AEN','ANR','ANT','BDP','BPC','LLC','LLF','OBF','OKC',
+                    'OKI','OKM','OKP','OKV','OMF','OMK','SA0','SA1','SAD','SGP',
+                    'SKA','TNK','TON','WAN','ZSL')
+
+dat <- dat %>% mutate(subbasin = case_when(
+  site_code %in% methow_sites   ~ 'Methow',
+  site_code %in% okanogan_sites ~ 'Okanogan', TRUE ~ 'Other'))
+
+first_det <- dat %>% filter(subbasin != 'Other') %>%
+  group_by(`Tag Code`, subbasin) %>%
+  summarise(first_det = min(first_time), .groups='drop') %>%
+  mutate(year=year(first_det), doy=yday(first_det), month=month(first_det))
+
+lmr_detected <- dat %>% filter(site_code=='LMR') %>% pull(`Tag Code`) %>% unique()
+okl_detected <- dat %>% filter(site_code=='OKL') %>% pull(`Tag Code`) %>% unique()
+
+methow <- first_det %>%
+  filter(subbasin=='Methow', first_det >= mdy('3/4/2009'), year < 2026) %>%
+  mutate(detected = as.integer(`Tag Code` %in% lmr_detected), year_c = year - 2009)
+okanogan <- first_det %>%
+  filter(subbasin=='Okanogan', first_det >= mdy('10/8/2013'), year < 2026) %>%
+  mutate(detected = as.integer(`Tag Code` %in% okl_detected), year_c = year - 2013)
+
+gam_met <- gam(detected ~ s(doy, bs='cc', k=10) + s(year_c, k=5),
+               data=methow, family=binomial, method='REML')
+gam_oka <- gam(detected ~ s(doy, bs='cc', k=10) + s(year_c, k=5),
+               data=okanogan, family=binomial, method='REML')
+
+# --- Entiat / ENL ---
+ent_raw <- bind_rows(
+  read_csv('ENTSteel07-12.csv', col_types = col_spec),
+  read_csv('ENTSteel12-18.csv', col_types = col_spec),
+  read_csv('ENTSteel18-26.csv', col_types = col_spec)
+) %>% mutate(first_time = mdy_hms(`First Time Value`),
+             site_code  = substr(`Site Name`, 1, 3))
+
+dam_sites <- c('RRF','RRJ','RIA')
+ENL_start <- mdy('10/25/2007')
+
+enl_first_det <- ent_raw %>%
+  filter(!site_code %in% dam_sites) %>%
+  group_by(`Tag Code`) %>%
+  summarise(first_det = min(first_time), .groups='drop') %>%
+  mutate(year=year(first_det), doy=yday(first_det), month=month(first_det))
+
+enl_detected <- ent_raw %>% filter(site_code=='ENL') %>% pull(`Tag Code`) %>% unique()
+
+entiat <- enl_first_det %>%
+  filter(first_det >= ENL_start, year < 2026) %>%
+  mutate(detected = as.integer(`Tag Code` %in% enl_detected),
+         year_c = year - 2007)
+
+gam_enl <- gam(detected ~ s(doy, bs='cc', k=10) + s(year_c, k=8),
+               data=entiat, family=binomial, method='REML')
+```
+
+## Background
+
+PIT (Passive Integrated Transponder) tag arrays at the mouths of the Methow, Okanogan, and Entiat rivers provide important tools for monitoring adult steelhead returning to these subbasins. The Lower Methow River array at Pateros (LMR) and the Lower Okanogan Instream Array (OKL) detect fish that have passed Wells Dam on the Columbia River, while the Lower Entiat River array (ENL) detects fish that have passed Rocky Reach Dam. These gateway sites serve as the primary confirmation that a fish has entered its respective subbasin. However, detection at these arrays is not perfect, and fish observed at upstream locations without a corresponding gateway detection represent individuals that were missed at the array.
+
+Understanding detection efficiency — and how it varies by season and year — is important for accurately interpreting subbasin return data and for correcting escapement estimates. This analysis quantifies detection efficiency at LMR, OKL, and ENL using long-term PIT tag detection records and develops predictive models that can estimate efficiency for any given date.
+
+## Data
+
+**Methow and Okanogan:** Detection data were obtained from PTAGIS for adult steelhead (summer run, wild and hatchery) detected at Wells Dam (site WEA) and subsequently detected at any location within the Methow or Okanogan subbasins. Three PTAGIS query exports were combined to span the full available record:
+
+- 2005–2010 (*WEAMetOkaSteel05-10.csv*)
+- 2010–2015 (*WEAMetOkaSteel10-15.csv*)
+- 2015–present (*WEAtoMetOkaSteel.csv*)
+
+The combined dataset contains detection records at `r length(unique(dat$site_code[dat$subbasin != 'Other']))` unique instream and acclimation pond sites across both subbasins.
+
+**Entiat:** Detection data were obtained from PTAGIS for adult steelhead detected at Rocky Reach Dam (sites RRF, RIA) and subsequently detected at any location within the Entiat River subbasin. Three PTAGIS query exports were combined:
+
+- 2007–2012 (*ENTSteel07-12.csv*)
+- 2012–2018 (*ENTSteel12-18.csv*)
+- 2018–present (*ENTSteel18-26.csv*)
+
+The combined dataset contains detection records at `r length(unique(ent_raw$site_code[!ent_raw$site_code %in% dam_sites]))` unique Entiat subbasin sites. Detections at Rocky Reach Dam itself (RRF, RRJ, RIA) were excluded from the subbasin detection analysis.
+
+For all three systems, each fish was represented by its unique PIT tag code, and only its first detection within the subbasin was retained for analysis.
+
+## Methods
+
+**Gateway site detection:** A fish was considered "detected" at the gateway if its PIT tag appeared in any detection record at LMR (Methow), OKL (Okanogan), or ENL (Entiat). Fish with detections at upstream subbasin sites but no corresponding gateway detection were considered "missed" by the array — they entered the subbasin but were not recorded at the mouth.
+
+**Operational start dates:** LMR began operation on March 4, 2009; OKL began operation on October 8, 2013; ENL began operation on October 25, 2007. Fish whose first subbasin detection predated these start times were excluded from detection efficiency calculations, as the absence of a gateway detection in those cases reflects non-operation rather than a detection failure. This resulted in the exclusion of 174 Methow fish and 810 Okanogan fish; no Entiat fish required exclusion on this basis. The incomplete year 2026 was excluded from model fitting for all three sites.
+
+**Predictive model:** Detection efficiency (probability of detecting a fish at the gateway array) was modeled as a function of day of year and calendar year using a binomial Generalized Additive Model (GAM):
+
+> logit(P[detected]) = s(day-of-year) + s(year)
+
+The day-of-year term used a cyclic cubic regression spline (k = 10) to capture the seasonal pattern while enforcing continuity across the December–January boundary. The year term used a standard penalized cubic regression spline (k = 5 for LMR and OKL; k = 8 for ENL to accommodate a more complex inter-annual trend). Models were fit separately for each site using REML smoothness selection. Model predictions were validated against observed monthly detection rates.
+
+## Results
+
+**Overall detection rates** (gateway site operational period only):
+
+```{r overall-table}
+roc_auc <- function(obs, pred) {
+  n1 <- sum(obs); n0 <- sum(1-obs)
+  s  <- sum(rank(pred)[obs==1]) - n1*(n1+1)/2
+  s / (n1 * n0)
+}
+overall <- data.frame(
+  Site = c("LMR (Methow)", "OKL (Okanogan)", "ENL (Entiat)"),
+  `Dam` = c("Wells Dam", "Wells Dam", "Rocky Reach Dam"),
+  `Period` = c("2009–2025", "2013–2025", "2007–2025"),
+  `Eligible fish` = c(nrow(methow), nrow(okanogan), nrow(entiat)),
+  `Detected at gateway` = c(sum(methow$detected), sum(okanogan$detected), sum(entiat$detected)),
+  `Missed (%)` = c(
+    sprintf("%d (%.1f%%)", sum(!methow$detected),   100*mean(!methow$detected)),
+    sprintf("%d (%.1f%%)", sum(!okanogan$detected), 100*mean(!okanogan$detected)),
+    sprintf("%d (%.1f%%)", sum(!entiat$detected),   100*mean(!entiat$detected))
+  ), check.names = FALSE
+)
+kable(overall, align='llrrrl')
+```
+
+### Methow (LMR) and Okanogan (OKL)
+
+**Seasonal pattern:** LMR and OKL show a pronounced seasonal cycle driven primarily by spring snowmelt conditions. Detection is near-perfect during the peak summer and fall migration (August–November, >98% at both sites), declines moderately through winter, and reaches its lowest point during the spring period (April–June). Spring detection efficiency averages approximately 37% at LMR and 26% at OKL, likely reflecting reduced antenna performance under high-flow, high-turbidity conditions.
+
+```{r seasonal-table-metoka}
+seas_met <- methow %>%
+  mutate(season = case_when(
+    month %in% 8:11  ~ "Summer/Fall (Aug-Nov)",
+    month %in% c(12,1,2) ~ "Winter (Dec-Feb)",
+    month %in% 3:7   ~ "Spring (Mar-Jul)"
+  )) %>%
+  group_by(season) %>%
+  summarise(n=n(), det_pct=sprintf("%.1f%%", 100*mean(detected)), .groups='drop') %>%
+  arrange(match(season, c("Summer/Fall (Aug-Nov)","Winter (Dec-Feb)","Spring (Mar-Jul)")))
+
+seas_oka <- okanogan %>%
+  mutate(season = case_when(
+    month %in% 8:11  ~ "Summer/Fall (Aug-Nov)",
+    month %in% c(12,1,2) ~ "Winter (Dec-Feb)",
+    month %in% 3:7   ~ "Spring (Mar-Jul)"
+  )) %>%
+  group_by(season) %>%
+  summarise(n=n(), det_pct=sprintf("%.1f%%", 100*mean(detected)), .groups='drop') %>%
+  arrange(match(season, c("Summer/Fall (Aug-Nov)","Winter (Dec-Feb)","Spring (Mar-Jul)")))
+
+seas_both <- full_join(seas_met, seas_oka, by='season', suffix=c(' (LMR)',' (OKL)')) %>%
+  rename(Season = season)
+kable(seas_both, align='lrrrr',
+      col.names=c("Season","n (LMR)","Det. eff. (LMR)","n (OKL)","Det. eff. (OKL)"))
+```
+
+**Annual trend:** Detection efficiency at both sites showed a decline around 2015–2019 before recovering in more recent years (2021–2025), suggesting changes in array performance or flow conditions during that period.
+
+**Figure 1** shows predicted detection efficiency by season and year for LMR and OKL.
+
+```{r figure1, fig.width=10, fig.height=7.5, dpi=150, fig.cap="Figure 1. Predicted gateway array detection efficiency at LMR (Methow, left) and OKL (Okanogan, right). Top panels show seasonal curves for selected years with observed monthly means (bubbles proportional to √n). Bottom panels show the annual trend for September 15 and April 15, with observed annual means overlaid."}
+par(mfrow=c(2,2), mar=c(4,4.5,3,2), oma=c(0,0,0,0))
+doy_seq <- 1:365
+month_at  <- yday(as.Date(paste0('2020-',sprintf('%02d',1:12),'-01')))
+month_lab <- month.abb
+
+for (info in list(
+  list(label='LMR - Methow Gateway', model=gam_met, base=2009,
+       years=c(2010,2013,2016,2019,2022,2025), obs_data=methow, col='#1b7837'),
+  list(label='OKL - Okanogan Gateway', model=gam_oka, base=2013,
+       years=c(2014,2016,2018,2020,2022,2025), obs_data=okanogan, col='#762a83')
+)) {
+  obs_monthly <- info$obs_data %>%
+    group_by(month) %>%
+    summarise(det=100*mean(detected), n=n(), .groups='drop') %>%
+    mutate(doy=yday(as.Date(sprintf('2020-%02d-15',month))))
+  cols <- colorRampPalette(c('grey80', info$col))(length(info$years))
+  plot(NA, xlim=c(1,365), ylim=c(0,100), xlab='Month',
+       ylab='Detection efficiency (%)', main=info$label, xaxt='n', las=1)
+  axis(1, at=month_at, labels=month_lab, cex.axis=0.85)
+  abline(h=seq(0,100,20), col='grey92')
+  for (i in seq_along(info$years)) {
+    nd <- data.frame(doy=doy_seq, year_c=info$years[i]-info$base)
+    lines(doy_seq, predict(info$model, newdata=nd, type='response')*100, col=cols[i], lwd=2)
+  }
+  with(obs_monthly, symbols(doy, det, circles=sqrt(n), inches=0.15,
+       add=TRUE, bg=adjustcolor('grey30',0.5), fg='grey30'))
+  legend('topleft', legend=info$years, col=cols, lwd=2, bty='n', cex=0.72, title='Year')
+  legend('bottomleft', legend='Observed monthly mean\n(bubble \u221an)',
+         pch=21, pt.bg='grey50', bty='n', cex=0.72)
+}
+
+for (info in list(
+  list(label='LMR - Methow Gateway', model=gam_met, base=2009,
+       data=methow, col='#1b7837', yr_range=2009:2025),
+  list(label='OKL - Okanogan Gateway', model=gam_oka, base=2013,
+       data=okanogan, col='#762a83', yr_range=2013:2025)
+)) {
+  obs_annual <- info$data %>%
+    group_by(year) %>%
+    summarise(det=100*mean(detected), n=n(), .groups='drop') %>%
+    filter(year %in% info$yr_range)
+  doys <- c(258, 105)
+  doy_cols <- c(info$col, adjustcolor(info$col, 0.45))
+  plot(NA, xlim=range(info$yr_range), ylim=c(0,100), xlab='Year',
+       ylab='Detection efficiency (%)', main=info$label, las=1)
+  abline(h=seq(0,100,20), col='grey92')
+  for (i in seq_along(doys)) {
+    preds <- sapply(info$yr_range, function(y)
+      predict(info$model, newdata=data.frame(doy=doys[i], year_c=y-info$base), type='response')*100)
+    lines(info$yr_range, preds, col=doy_cols[i], lwd=2.5, lty=i)
+  }
+  with(obs_annual, symbols(year, det, circles=sqrt(n), inches=0.18, add=TRUE,
+       bg=adjustcolor('grey40',0.4), fg='grey40'))
+  legend('bottomleft',
+         legend=c('Sep 15 (summer/fall)', 'Apr 15 (spring)', 'Observed annual mean'),
+         col=c(doy_cols,'grey40'), lty=c(1,2,NA), lwd=c(2.5,2.5,NA),
+         pch=c(NA,NA,21), pt.bg='grey50', bty='n', cex=0.72)
+}
+```
+
+### Entiat (ENL)
+
+**Seasonal pattern:** ENL shows a markedly different seasonal pattern from LMR and OKL. Detection is generally high during winter and early spring (February–April, >80%), drops in May (coinciding with the Entiat River spring freshet), partially recovers through summer, dips again in September at the onset of the peak summer steelhead run, then improves through fall and winter. This double-trough pattern — in May and September — differs from the single spring trough at the Wells Dam subbasin sites and likely reflects the hydrology and flow dynamics of the smaller Entiat River system.
+
+```{r seasonal-table-enl}
+seas_enl <- entiat %>%
+  mutate(season = case_when(
+    month %in% 8:11  ~ "Summer/Fall (Aug-Nov)",
+    month %in% c(12,1,2) ~ "Winter (Dec-Feb)",
+    month %in% 3:7   ~ "Spring (Mar-Jul)"
+  )) %>%
+  group_by(season) %>%
+  summarise(n=n(), det_pct=sprintf("%.1f%%", 100*mean(detected)), .groups='drop') %>%
+  arrange(match(season, c("Summer/Fall (Aug-Nov)","Winter (Dec-Feb)","Spring (Mar-Jul)")))
+kable(seas_enl, align='lrr',
+      col.names=c("Season","n (ENL)","Det. eff. (ENL)"))
+```
+
+**Annual trend:** Detection efficiency at ENL was high (>90%) from 2008 through approximately 2014, then declined sharply through 2019, partially recovered around 2020–2021, and declined again in 2023–2024. This pronounced and non-monotonic inter-annual pattern is the dominant source of variation at ENL and is not explained by seasonal timing alone. The causes likely include array maintenance issues, equipment failures, or changes in local hydraulic conditions affecting PIT tag detection range.
+
+**Figure 2** shows predicted detection efficiency by season and year for ENL.
+
+```{r figure2, fig.width=8, fig.height=4, dpi=150, fig.cap="Figure 2. Predicted gateway array detection efficiency at ENL (Entiat River). Left panel shows seasonal curves for selected years with observed monthly means (bubbles proportional to √n). Right panel shows the annual trend for September 15 and April 15, with observed annual means overlaid."}
+par(mfrow=c(1,2), mar=c(4,4.5,3,2))
+doy_seq   <- 1:365
+month_at  <- yday(as.Date(paste0('2020-',sprintf('%02d',1:12),'-01')))
+col_enl   <- '#d6604d'
+yrs_seas  <- c(2008,2011,2014,2017,2020,2023,2025)
+cols      <- colorRampPalette(c('grey80', col_enl))(length(yrs_seas))
+
+obs_monthly <- entiat %>% group_by(month) %>%
+  summarise(det=100*mean(detected), n=n(), .groups='drop') %>%
+  mutate(doy=yday(as.Date(sprintf('2020-%02d-15',month))))
+
+plot(NA, xlim=c(1,365), ylim=c(0,100), xlab='Month',
+     ylab='Detection efficiency (%)', main='ENL - Entiat Gateway', xaxt='n', las=1)
+axis(1, at=month_at, labels=month.abb, cex.axis=0.85)
+abline(h=seq(0,100,20), col='grey92')
+for (i in seq_along(yrs_seas)) {
+  nd <- data.frame(doy=doy_seq, year_c=yrs_seas[i]-2007)
+  lines(doy_seq, predict(gam_enl, newdata=nd, type='response')*100, col=cols[i], lwd=2)
+}
+with(obs_monthly, symbols(doy, det, circles=sqrt(n), inches=0.15,
+     add=TRUE, bg=adjustcolor('grey30',0.5), fg='grey30'))
+legend('bottomleft', legend=yrs_seas, col=cols, lwd=2, bty='n', cex=0.72, title='Year')
+
+obs_annual <- entiat %>% group_by(year) %>%
+  summarise(det=100*mean(detected), n=n(), .groups='drop')
+yr_range   <- 2008:2025
+doy_cols   <- c(col_enl, adjustcolor(col_enl, 0.45))
+plot(NA, xlim=c(2007,2025), ylim=c(0,100), xlab='Year',
+     ylab='Detection efficiency (%)', main='ENL - Annual trend', las=1)
+abline(h=seq(0,100,20), col='grey92')
+for (i in seq_along(c(258,105))) {
+  preds <- sapply(yr_range, function(y)
+    predict(gam_enl, newdata=data.frame(doy=c(258,105)[i], year_c=y-2007), type='response')*100)
+  lines(yr_range, preds, col=doy_cols[i], lwd=2.5, lty=i)
+}
+with(obs_annual, symbols(year, det, circles=sqrt(n), inches=0.18, add=TRUE,
+     bg=adjustcolor('grey40',0.4), fg='grey40'))
+legend('bottomleft',
+       legend=c('Sep 15 (summer/fall)', 'Apr 15 (spring)', 'Observed annual mean'),
+       col=c(doy_cols,'grey40'), lty=c(1,2,NA), lwd=c(2.5,2.5,NA),
+       pch=c(NA,NA,21), pt.bg='grey50', bty='n', cex=0.72)
+```
+
+### Model performance
+
+```{r model-table}
+mod_tab <- data.frame(
+  Site = c("LMR (Methow)", "OKL (Okanogan)", "ENL (Entiat)"),
+  `Training years` = c("2009–2025", "2013–2025", "2007–2025"),
+  `n (fish)` = c(nrow(methow), nrow(okanogan), nrow(entiat)),
+  `Deviance explained` = c(
+    sprintf("%.1f%%", summary(gam_met)$dev.expl * 100),
+    sprintf("%.1f%%", summary(gam_oka)$dev.expl * 100),
+    sprintf("%.1f%%", summary(gam_enl)$dev.expl * 100)
+  ),
+  AUC = c(
+    round(roc_auc(methow$detected,   fitted(gam_met)), 3),
+    round(roc_auc(okanogan$detected, fitted(gam_oka)), 3),
+    round(roc_auc(entiat$detected,   fitted(gam_enl)), 3)
+  ), check.names = FALSE
+)
+kable(mod_tab, align='llrrl')
+```
+
+All three models discriminate well between detected and missed fish (AUC > 0.84). The lower deviance explained at ENL (27.4%) compared to LMR and OKL reflects the more complex and less predictable inter-annual variation at that site.
+
+## Prediction Tool
+
+The fitted GAM objects for all three sites are saved in `gateway_detection_models.RData`. To obtain a predicted detection efficiency for any date, load the models and call `predict()` directly:
+
+```r
+load("gateway_detection_models.RData")
+
+# Predicted detection efficiency at LMR on April 15, 2023
+predict(gam_met,
+        newdata = data.frame(doy    = yday(as.Date("2023-04-15")),
+                             year_c = 2023 - 2009),   # lmr_base_year = 2009
+        type = "response")
+
+# Predicted detection efficiency at OKL on September 1, 2022
+predict(gam_oka,
+        newdata = data.frame(doy    = yday(as.Date("2022-09-01")),
+                             year_c = 2022 - 2013),   # okl_base_year = 2013
+        type = "response")
+
+# Predicted detection efficiency at ENL on March 15, 2021
+predict(gam_enl,
+        newdata = data.frame(doy    = yday(as.Date("2021-03-15")),
+                             year_c = 2021 - 2007),   # enl_base_year = 2007
+        type = "response")
+```
+
+**Note:** Predictions for June–July at LMR and OKL carry higher uncertainty due to sparse observations in those months. At ENL, inter-annual variation is large and not fully captured by the year smooth; predictions for years well outside the 2007–2025 training range should be treated with caution.
+
+## Bayesian Flow-Informed Detection Model
+
+### Rationale
+
+The GAM models described above capture seasonal and inter-annual variation empirically, but do not explain *why* detection varies. River discharge is the primary physical driver of PIT array detection efficiency: high flows increase water velocity and turbulence, reducing the time a tagged fish spends within the antenna detection field. Incorporating daily discharge as an explicit covariate provides a mechanistic model that can (1) be driven by observed or forecast flow conditions, (2) separate flow-driven detection failures from equipment or maintenance issues captured by year random effects, and (3) propagate uncertainty in detection efficiency through to downstream escapement estimates.
+
+### Data
+
+Daily mean discharge was retrieved from USGS National Water Information System gauges proximal to each array:
+
+- **LMR:** Methow River near Pateros, WA (USGS 12449950; drainage area 1,772 mi²)
+- **OKL:** Okanogan River at Oroville, WA (USGS 12439500; drainage area 3,195 mi²)
+- **ENL:** Entiat River near Entiat, WA (USGS 12452990; drainage area 419 mi²)
+
+Discharge on the date of each fish's first subbasin detection was joined to the detection dataset.
+
+### Exploratory Analysis
+
+Before model fitting, detection rates were tabulated by discharge decile. LMR and OKL show a clear monotonic decline in detection with increasing flow. ENL shows an inverted-U pattern: both very low flows (<100 cfs) and very high flows (>1,000 cfs) are associated with reduced detection, with peak detection efficiency at moderate flows (~200–500 cfs). This physically distinct pattern — consistent with the smaller Entiat River having less main-channel flow concentration at low stages — motivated a quadratic log-discharge term for ENL.
+
+```{r flow-explore, fig.width=9, fig.height=3, dpi=150, fig.cap="Figure 3. Detection efficiency by discharge decile at each gateway site. Bubble size proportional to number of fish in each decile bin."}
+library(brms)
+load('gateway_bayesian_models.RData')
+methow_b   <- methow   %>% mutate(month = month(date))
+okanogan_b <- okanogan %>% mutate(month = month(date))
+entiat_b   <- entiat   %>% mutate(month = month(date))
+
+par(mfrow=c(1,3), mar=c(4,4.5,3,2))
+cols3 <- c('#1b7837','#762a83','#d6604d')
+for (idx in 1:3) {
+  info <- list(
+    list(methow_b,   'LMR (Methow)',   cols3[1]),
+    list(okanogan_b, 'OKL (Okanogan)', cols3[2]),
+    list(entiat_b,   'ENL (Entiat)',   cols3[3])
+  )[[idx]]
+  obs_bin <- info[[1]] %>% mutate(bin=ntile(discharge,10)) %>%
+    group_by(bin) %>%
+    summarise(q=median(discharge), det=100*mean(detected), n=n(), .groups='drop')
+  plot(NA, xlim=range(obs_bin$q)*c(0.7,1.5), ylim=c(0,100), log='x',
+       xlab='Discharge (cfs)', ylab='Detection efficiency (%)',
+       main=info[[2]], las=1)
+  abline(h=seq(0,100,20), col='grey92')
+  with(obs_bin, symbols(q, det, circles=sqrt(n), inches=0.18, add=TRUE,
+       bg=adjustcolor(info[[3]],0.5), fg=info[[3]]))
+}
+```
+
+### Model Structure
+
+Detection efficiency was modeled using a Bayesian binomial generalized additive model implemented in Stan via the **brms** package. Three model variants were compared:
+
+1. **GAM (doy + year smooth):** The baseline model described above — no flow data
+2. **Bayesian (flow + year RE):** Log-discharge plus year random effects only
+3. **Bayesian (flow + seasonal + year RE):** Full model combining log-discharge, a cyclic day-of-year spline, and year random effects
+
+The full model formula for LMR and OKL:
+
+> logit(P[detected]) = α + β·log(Q*) + s(doy) + u_year,   u_year ~ Normal(0, σ²)
+
+For ENL, a quadratic log-discharge term was added to capture the inverted-U flow response:
+
+> logit(P[detected]) = α + β₁·log(Q*) + β₂·[log(Q*)]² + s(doy) + u_year
+
+where Q* denotes standardized log-discharge. Weakly informative priors were used (Normal(0,3) on regression coefficients, Exponential(1) on standard deviations). Four MCMC chains of 2,000 iterations (1,000 warmup) were run; all chains converged (R̂ ≤ 1.01).
+
+### Model Comparison
+
+```{r model-comparison-table}
+roc_auc <- function(obs, pred) {
+  n1=sum(obs); n0=sum(1-obs)
+  s=sum(rank(pred)[obs==1])-n1*(n1+1)/2; s/(n1*n0)
+}
+gam_lmr_pp <- predict(gam_met, newdata=data.frame(doy=methow_b$doy, year_c=methow_b$year_c), type='response')
+gam_okl_pp <- predict(gam_oka, newdata=data.frame(doy=okanogan_b$doy, year_c=okanogan_b$year_c), type='response')
+gam_enl_pp <- predict(gam_enl, newdata=data.frame(doy=entiat_b$doy, year_c=entiat_b$year_c), type='response')
+bay_lmr_pp <- colMeans(posterior_epred(fit_lmr_comb))
+bay_okl_pp <- colMeans(posterior_epred(fit_okl_comb))
+bay_enl_pp <- colMeans(posterior_epred(fit_enl_comb))
+
+comp_tab <- data.frame(
+  Site  = c('LMR','LMR','OKL','OKL','ENL','ENL'),
+  Model = c('GAM (doy + year smooth)',
+            'Bayesian (flow + seasonal + year RE)',
+            'GAM (doy + year smooth)',
+            'Bayesian (flow + seasonal + year RE)',
+            'GAM (doy + year smooth)',
+            'Bayesian (flow + seasonal + year RE)'),
+  AUC   = round(c(
+    roc_auc(methow_b$detected,   gam_lmr_pp),
+    roc_auc(methow_b$detected,   bay_lmr_pp),
+    roc_auc(okanogan_b$detected, gam_okl_pp),
+    roc_auc(okanogan_b$detected, bay_okl_pp),
+    roc_auc(entiat_b$detected,   gam_enl_pp),
+    roc_auc(entiat_b$detected,   bay_enl_pp)
+  ), 3),
+  check.names = FALSE
+)
+kable(comp_tab, align='llr')
+```
+
+The combined Bayesian model (flow + seasonal + year RE) matches or outperforms the GAM at all three sites. The improvement is largest at ENL (AUC +0.029), where the non-linear flow response was not well captured by the day-of-year smooth alone. LOO cross-validation confirms the combined Bayesian model as superior to the flow-only variant at all sites.
+
+### Results
+
+**Flow effects:** At LMR and OKL, detection efficiency declines monotonically with increasing discharge. The standardized log-discharge coefficients (LMR: β = −0.43, 95% CI −0.56 to −0.30; OKL: β = −0.46, 95% CI −0.68 to −0.24) indicate that a doubling of discharge corresponds to roughly a 7–8 percentage point reduction in detection efficiency at typical flow levels, after accounting for seasonal patterns. At ENL, both the linear (β₁ = 0.74) and quadratic (β₂ = −0.67) terms are well-estimated, placing the optimal detection flow at approximately 200–500 cfs.
+
+**Year random effects:** After accounting for flow and seasonal patterns, year random effects reveal which years had anomalous detection beyond what environmental conditions alone would predict (Figure 4). At ENL, years 2019, 2023, and 2024 show large negative deviations (worse than flow + season predicts), strongly suggesting persistent equipment or maintenance problems in those years independent of hydrology. At OKL, 2019, 2024, and 2025 show similar patterns. At LMR, most year effects overlap zero, indicating that flow and season explain the majority of the detection variation at that site.
+
+**Figure 4** shows the flow-detection curves with posterior uncertainty, year random effects, and monthly observed vs. predicted detection rates for all three sites.
+
+```{r figure4, fig.width=12, fig.height=9.5, dpi=150, fig.cap="Figure 4. Bayesian combined model (flow + seasonal + year random effects) results for LMR (top), OKL (middle), and ENL (bottom). Left column: flow-detection curves with 95% posterior credible interval (population-level), overlaid on observed decile means (bubble size proportional to √n). Middle column: year random effects with 95% credible intervals; green = above expectation, red = below expectation, grey = uncertain. Right column: observed vs. predicted monthly detection efficiency."}
+par(mfrow=c(3,3), mar=c(4,4.5,3,2), oma=c(0,0,0,0))
+
+for (idx in 1:3) {
+  info <- list(
+    list(fit_lmr_comb, methow_b,   'LMR (Methow)',   cols3[1], c(280,8000), 'linear'),
+    list(fit_okl_comb, okanogan_b, 'OKL (Okanogan)', cols3[2], c(200,4000), 'linear'),
+    list(fit_enl_comb, entiat_b,   'ENL (Entiat)',   cols3[3], c(50,2000),  'quad')
+  )[[idx]]
+
+  fit <- info[[1]]; df <- info[[2]]; label <- info[[3]]; col <- info[[4]]
+
+  q_seq <- exp(seq(log(info[[5]][1]), log(info[[5]][2]), length=100))
+  lq_s  <- (log(q_seq) - mean(log(df$discharge))) / sd(log(df$discharge))
+  if (info[[6]] == 'linear') {
+    nd <- data.frame(log_q_s=lq_s, doy=median(df$doy), year='2015')
+  } else {
+    nd <- data.frame(log_q_s=lq_s, log_q2_s=lq_s^2, doy=median(df$doy), year='2015')
+  }
+  pp_mat <- posterior_epred(fit, newdata=nd, re_formula=NA)
+  pp_med <- apply(pp_mat,2,median)*100
+  pp_lo  <- apply(pp_mat,2,quantile,0.025)*100
+  pp_hi  <- apply(pp_mat,2,quantile,0.975)*100
+  obs_bin <- df %>% mutate(bin=ntile(discharge,10)) %>%
+    group_by(bin) %>%
+    summarise(q=median(discharge), det=100*mean(detected), n=n(), .groups='drop')
+
+  plot(NA, xlim=range(q_seq), ylim=c(0,100), log='x',
+       xlab='Discharge (cfs, log scale)', ylab='Detection efficiency (%)',
+       main=paste(label,'- Flow effect'), las=1)
+  abline(h=seq(0,100,20), col='grey92')
+  polygon(c(q_seq,rev(q_seq)), c(pp_hi,rev(pp_lo)), col=adjustcolor(col,0.2), border=NA)
+  lines(q_seq, pp_med, col=col, lwd=2.5)
+  with(obs_bin, symbols(q, det, circles=sqrt(n), inches=0.13, add=TRUE,
+       bg=adjustcolor('grey30',0.5), fg='grey40'))
+  legend('bottomleft', legend=c('Posterior median','95% CI','Observed decile mean'),
+         col=c(col,col,'grey40'), lwd=c(2.5,NA,NA), lty=c(1,NA,NA),
+         pch=c(NA,15,21), pt.bg=c(NA,adjustcolor(col,0.2),'grey50'),
+         pt.cex=c(NA,2,1.2), bty='n', cex=0.6)
+
+  re  <- ranef(fit)$year[,,1]
+  yrs <- as.integer(rownames(re))
+  re_col <- ifelse(re[,'Q2.5']>0, col, ifelse(re[,'Q97.5']<0,'#d73027','grey65'))
+  ylim_re <- max(abs(c(re[,'Q2.5'], re[,'Q97.5']))) * 1.1
+  plot(NA, xlim=c(min(yrs)-0.5, max(yrs)+0.5), ylim=c(-ylim_re, ylim_re),
+       xlab='Year', ylab='Random effect (logit)', main=paste(label,'- Year RE'),
+       las=1, xaxt='n')
+  axis(1, at=yrs, labels=yrs, las=2, cex.axis=0.65)
+  abline(h=0, col='grey50', lty=2); abline(h=seq(-4,4,1), col='grey93')
+  segments(yrs, re[,'Q2.5'], yrs, re[,'Q97.5'], col=re_col, lwd=1.8)
+  points(yrs, re[,'Estimate'], pch=21, bg=re_col, col='white', cex=1.1)
+
+  pp_fish <- colMeans(posterior_epred(fit))
+  obs_mo <- df %>% mutate(pred=pp_fish) %>% group_by(month) %>%
+    summarise(obs=100*mean(detected), pred=100*mean(pred), n=n(), .groups='drop')
+  plot(NA, xlim=c(0.5,12.5), ylim=c(0,100), xlab='Month',
+       ylab='Detection efficiency (%)', main=paste(label,'- Obs vs predicted'),
+       las=1, xaxt='n')
+  axis(1, at=1:12, labels=month.abb, cex.axis=0.72)
+  abline(h=seq(0,100,20), col='grey92')
+  with(obs_mo, {
+    symbols(month, obs, circles=sqrt(n), inches=0.12, add=TRUE,
+            bg=adjustcolor('grey40',0.5), fg='grey40')
+    points(month, pred, pch=23, bg=col, col='white', cex=1.3)
+  })
+  legend('bottomleft', legend=c('Observed','Predicted'), pch=c(21,23),
+         pt.bg=c('grey50',col), bty='n', cex=0.65)
+}
+```
+
+### Prediction with the Bayesian Model
+
+The combined Bayesian models are saved in `gateway_bayesian_models.RData`. To predict detection efficiency for a specific date using observed or forecast discharge:
+
+```r
+load("gateway_bayesian_models.RData")
+
+# Example: LMR on April 20, 2024 with observed discharge of 1,200 cfs
+# Standardize log(Q) using training data mean and SD
+lq_mean <- mean(log(methow$discharge))
+lq_sd   <- sd(log(methow$discharge))
+lq_s    <- (log(1200) - lq_mean) / lq_sd
+
+nd <- data.frame(log_q_s = lq_s, doy = yday(as.Date("2024-04-20")), year = "2024")
+posterior_epred(fit_lmr_comb, newdata = nd, re_formula = NULL)  # includes year RE
+posterior_epred(fit_lmr_comb, newdata = nd, re_formula = NA)    # population level only
+```
+
+Using `re_formula = NULL` incorporates the year-specific random effect (better for known years); `re_formula = NA` gives the population-level prediction useful for forecasting future years.
+
+## Predicted Detection Efficiency Reference Tables
+
+Predicted detection efficiency (%) by month and year for all three sites. Values represent the mid-month prediction for each calendar year.
+
+```{r pred-tables}
+make_pred_table <- function(model, base_year, years) {
+  mat <- sapply(years, function(y) {
+    sapply(1:12, function(m) {
+      doy_mid <- yday(as.Date(sprintf("2020-%02d-15", m)))
+      p <- predict(model, newdata=data.frame(doy=doy_mid, year_c=y-base_year), type="response")
+      sprintf("%.1f", p * 100)
+    })
+  })
+  df <- as.data.frame(mat)
+  colnames(df) <- years
+  cbind(Month = month.abb, df)
+}
+
+kable(make_pred_table(gam_met, 2009, seq(2009,2025,by=2)),
+      caption="LMR (Methow) — predicted detection efficiency (%)",
+      align=c('l', rep('r', 9)))
+
+kable(make_pred_table(gam_oka, 2013, seq(2013,2025,by=2)),
+      caption="OKL (Okanogan) — predicted detection efficiency (%)",
+      align=c('l', rep('r', 7)))
+
+kable(make_pred_table(gam_enl, 2007, seq(2008,2025,by=2)),
+      caption="ENL (Entiat) — predicted detection efficiency (%)",
+      align=c('l', rep('r', 9)))
+```

@@ -1,0 +1,5 @@
+Model,n,Beta,OR,CI_low,CI_high,P_neg
+Strict (original) — standard,404,-0.801,0.449,-1.246,-0.352,1
+Strict (original) — det-corr,402,-1.115,0.328,-1.782,-0.488,1
+Strict (reclassified) — standard,404,-0.444,0.641,-0.864,-0.015,0.979
+Strict (reclassified) — det-corr,402,-0.629,0.533,-1.235,-0.048,0.983

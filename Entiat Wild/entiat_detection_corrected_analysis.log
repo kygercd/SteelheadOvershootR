@@ -1,0 +1,512 @@
+Loading required package: Rcpp
+Loading 'brms' package (version 2.23.0). Useful instructions
+can be found by typing help('brms'). A more detailed introduction
+to the package is available through vignette('brms_overview').
+
+Attaching package: ‘brms’
+
+The following object is masked from ‘package:stats’:
+
+    ar
+
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+This is bayesplot version 1.15.0
+- Online documentation and vignettes at mc-stan.org/bayesplot
+- bayesplot theme set to bayesplot::theme_default()
+   * Does _not_ affect other ggplot2 plots
+   * See ?bayesplot_theme_set for details on theme setting
+
+Attaching package: ‘bayesplot’
+
+The following object is masked from ‘package:brms’:
+
+    rhat
+
+This is posterior version 1.6.1
+
+Attaching package: ‘posterior’
+
+The following object is masked from ‘package:bayesplot’:
+
+    rhat
+
+The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+The following objects are masked from ‘package:base’:
+
+    %in%, match
+
+
+Attaching package: ‘tidybayes’
+
+The following objects are masked from ‘package:brms’:
+
+    dstudent_t, pstudent_t, qstudent_t, rstudent_t
+
+======================================================================
+DETECTION-CORRECTED RETURN ANALYSIS: WILD ENTIAT STEELHEAD
+======================================================================
+
+--- Loading Data ---
+Loaded 404 fish
+  Group A: 223  |  Group B: 181
+
+p_ENL summary:
+  Non-missing: 395 / 404  (97.8%)
+  Mean (non-NA): 0.851
+  Min (non-NA):  0.246
+
+--- Preparing Model Data ---
+Fish using p_enl=1.0 (no correction): 9  [pre-operational or missing flow]
+
+Detection efficiency by group:
+# A tibble: 2 × 5
+  group     n p_enl_mean p_enl_min n_spring
+  <chr> <int>      <dbl>     <dbl>    <int>
+1 A       223      0.856     0.246        9
+2 B       181      0.854     0.26         0
+
+Group B fish by fate:
+# A tibble: 3 × 5
+  fate                      n p_enl p_lmr p_okl
+  <chr>                 <int> <dbl> <dbl> <dbl>
+1 Entiat detected         123 0.858 0.908 0.939
+2 Methow/Oka detected       7 0.894 0.966 0.999
+3 Undetected post-Wells    51 0.837 0.896 0.904
+
+--- Loading Standard (Uncorrected) Models ---
+Loaded standard models
+Standard Wells effect: β=-1.394 [-1.941, -0.870]
+
+======================================================================
+MODEL 1c: Detection-Corrected — Wells + Harvest + Year RE
+Y_i ~ Bernoulli(theta_i × p_ENL_i)
+n = 404 fish
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.000332 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 3.32 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000465 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 4.65 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.001782 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 17.82 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000494 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 4.94 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 5.901 seconds (Warm-up)
+Chain 2:                8.121 seconds (Sampling)
+Chain 2:                14.022 seconds (Total)
+Chain 2: 
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 5.975 seconds (Warm-up)
+Chain 1:                13.889 seconds (Sampling)
+Chain 1:                19.864 seconds (Total)
+Chain 1: 
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 6.278 seconds (Warm-up)
+Chain 3:                14.986 seconds (Sampling)
+Chain 3:                21.264 seconds (Total)
+Chain 3: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 6.282 seconds (Warm-up)
+Chain 4:                15.244 seconds (Sampling)
+Chain 4:                21.526 seconds (Total)
+Chain 4: 
+
+Model 1c Summary:
+ Family: det_corrected 
+  Links: mu = logit 
+Formula: EntiatDetected | vreal(p_enl_safe) ~ wells_interaction + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish_model (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.44      0.31     0.02     1.19 1.00     3919     4832
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             3.51      0.59     2.43     4.76 1.00    11190     7884
+wells_interaction    -1.84      0.42    -2.74    -1.07 1.00    11810     7877
+harvest_open         -0.52      0.54    -1.62     0.49 1.00    11648     8108
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1c Results (Detection-Corrected) ---
+Wells Interaction:
+  beta_mean = -1.836  (OR = 0.160)
+  95% CI   [-2.737, -1.067]
+  P(beta < 0) = 1.0000
+
+Harvest Status:
+  beta_mean = -0.519  (OR = 0.595)
+  95% CI   [-1.616, 0.491]
+
+Diagnostics:
+  Rhat range:     [1.000, 1.000]
+  Bulk ESS range: [11190, 11810]
+
+======================================================================
+MODEL 1d: Detection-Corrected — Wells + Harvest + Season + Year RE
+======================================================================
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 1).
+Chain 1: 
+Chain 1: Gradient evaluation took 0.00025 seconds
+Chain 1: 1000 transitions using 10 leapfrog steps per transition would take 2.5 seconds.
+Chain 1: Adjust your expectations accordingly!
+Chain 1: 
+Chain 1: 
+Chain 1: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 2).
+Chain 2: 
+Chain 2: Gradient evaluation took 0.000338 seconds
+Chain 2: 1000 transitions using 10 leapfrog steps per transition would take 3.38 seconds.
+Chain 2: Adjust your expectations accordingly!
+Chain 2: 
+Chain 2: 
+Chain 2: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 3).
+Chain 3: 
+Chain 3: Gradient evaluation took 0.000387 seconds
+Chain 3: 1000 transitions using 10 leapfrog steps per transition would take 3.87 seconds.
+Chain 3: Adjust your expectations accordingly!
+Chain 3: 
+Chain 3: 
+Chain 3: Iteration:    1 / 4500 [  0%]  (Warmup)
+
+SAMPLING FOR MODEL 'anon_model' NOW (CHAIN 4).
+Chain 4: 
+Chain 4: Gradient evaluation took 0.000403 seconds
+Chain 4: 1000 transitions using 10 leapfrog steps per transition would take 4.03 seconds.
+Chain 4: Adjust your expectations accordingly!
+Chain 4: 
+Chain 4: 
+Chain 4: Iteration:    1 / 4500 [  0%]  (Warmup)
+Chain 4: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 1: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 3: Iteration:  500 / 4500 [ 11%]  (Warmup)
+Chain 2: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 1: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 4: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 3: Iteration: 1000 / 4500 [ 22%]  (Warmup)
+Chain 2: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 2: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 1: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 1: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 3: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 3: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 4: Iteration: 1500 / 4500 [ 33%]  (Warmup)
+Chain 4: Iteration: 1501 / 4500 [ 33%]  (Sampling)
+Chain 2: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 1: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 2: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2000 / 4500 [ 44%]  (Sampling)
+Chain 4: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 4: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 1: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 3: Iteration: 2500 / 4500 [ 55%]  (Sampling)
+Chain 2: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 4: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 2: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 4: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 3: Iteration: 3000 / 4500 [ 66%]  (Sampling)
+Chain 2: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 2: 
+Chain 2:  Elapsed Time: 6.078 seconds (Warm-up)
+Chain 2:                9.686 seconds (Sampling)
+Chain 2:                15.764 seconds (Total)
+Chain 2: 
+Chain 4: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 4: 
+Chain 4:  Elapsed Time: 6.876 seconds (Warm-up)
+Chain 4:                9.36 seconds (Sampling)
+Chain 4:                16.236 seconds (Total)
+Chain 4: 
+Chain 1: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 3: Iteration: 3500 / 4500 [ 77%]  (Sampling)
+Chain 1: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 3: Iteration: 4000 / 4500 [ 88%]  (Sampling)
+Chain 1: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 1: 
+Chain 1:  Elapsed Time: 6.619 seconds (Warm-up)
+Chain 1:                13.888 seconds (Sampling)
+Chain 1:                20.507 seconds (Total)
+Chain 1: 
+Chain 3: Iteration: 4500 / 4500 [100%]  (Sampling)
+Chain 3: 
+Chain 3:  Elapsed Time: 6.804 seconds (Warm-up)
+Chain 3:                13.835 seconds (Sampling)
+Chain 3:                20.639 seconds (Total)
+Chain 3: 
+
+Model 1d Summary:
+ Family: det_corrected 
+  Links: mu = logit 
+Formula: EntiatDetected | vreal(p_enl_safe) ~ wells_interaction + harvest_open + spring_return + (1 | ReturnYearFactor) 
+   Data: fish_model (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.44      0.31     0.02     1.18 1.00     3527     5121
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             3.51      0.60     2.42     4.78 1.00    10770     8530
+wells_interaction    -1.84      0.42    -2.70    -1.06 1.00    11753     8444
+harvest_open         -0.51      0.53    -1.64     0.48 1.00    11166     8358
+spring_return         0.31      0.89    -1.35     2.08 1.00    14507     9181
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1d Results ---
+Wells (corrected + season): beta=-1.835, OR=0.160, [-2.705, -1.062], P(<0)=1.0000
+Spring Return:              beta=0.310, OR=1.364, [-1.349, 2.077]
+
+======================================================================
+COMPARISON: Uncorrected vs Detection-Corrected Wells Effect
+======================================================================
+
+Wells Interaction Effect (Group B vs Group A):
+# A tibble: 4 × 6
+  Model                             Beta_Mean CI_Lower CI_Upper    OR P_negative
+  <chr>                                 <dbl>    <dbl>    <dbl> <dbl>      <dbl>
+1 Standard (no detection correctio…     -1.39    -1.94   -0.87  0.248          1
+2 Standard + season covariate           -1.40    -1.94   -0.884 0.246          1
+3 Detection-corrected                   -1.84    -2.74   -1.07  0.16           1
+4 Detection-corrected + season          -1.84    -2.70   -1.06  0.16           1
+
+======================================================================
+HIDDEN STRAY ANALYSIS: 53 Undetected Group B Fish
+======================================================================
+Undetected Group B fish: 51
+
+Confirmed Group B detections:
+  Entiat: 123  |  Strays (Met/Oka): 7
+  Approx Methow strays: 13  |  Approx Okanogan strays: 0
+
+Detection-adjusted implied total counts:
+  Entiat returners (confirmed): 151.1  (from 123 detected)
+  Methow strays (implied):      7.3  (from 13 detected)
+  Okanogan strays (implied):    1.0  (from 1 detected)
+
+Prior fate probabilities for undetected Group B fish:
+  P(true Entiat return): 0.853
+  P(Methow stray):       0.041
+  P(Okanogan stray):     0.006
+  P(Other/unknown):      0.100
+
+Per-fish fate posteriors (mean across 53 undetected Group B fish):
+  P(true Entiat return):  0.394  (range: 0.000 - 0.863)
+  P(hidden Methow stray): 0.022  (range: 0.000 - 0.118)
+  P(hidden Okano stray):  0.002  (range: 0.000 - 0.019)
+  P(Other/died):          0.582
+
+Expected fate distribution for 53 undetected Group B fish:
+  True Entiat returners (missed at ENL): 20.1 fish
+  Hidden Methow strays (missed at LMR):  1.1 fish
+  Hidden Okanogan strays (missed at OKL): 0.1 fish
+  Other/died/unknown:                    29.7 fish
+
+Group B Entiat return rate:
+  Observed (raw):    123 / 181 = 68.0%
+  Corrected (+ENL missed): 143.1 / 181 = 79.1%
+
+Group A Entiat return rate:
+  Observed (raw):    200 / 223 = 89.7%
+  Corrected (+ENL missed): 208.2 / 223 = 93.4%
+
+--- Computing Corrected Annual Return Rates ---
+
+Annual observed vs corrected return rates by group (selected years):
+# A tibble: 37 × 7
+   ReturnYear group     n n_detected obs_rate mean_p_enl corr_rate
+        <dbl> <chr> <int>      <dbl>    <dbl>      <dbl>     <dbl>
+ 1       2006 A         2          0    0          0.943     0    
+ 2       2007 A         3          3    1          0.992     1    
+ 3       2007 B         3          2    0.667      1         0.667
+ 4       2008 A         3          1    0.333      0.946     0.351
+ 5       2008 B         2          2    1          0.966     1    
+ 6       2009 A        26         22    0.846      0.959     0.875
+ 7       2009 B        23         15    0.652      0.939     0.688
+ 8       2010 A        38         34    0.895      0.956     0.923
+ 9       2010 B        14          9    0.643      0.959     0.667
+10       2011 A        27         27    1          0.911     1    
+11       2011 B        16         12    0.75       0.952     0.781
+12       2012 A        11         10    0.909      0.851     0.964
+13       2012 B         9          5    0.556      0.952     0.581
+14       2013 A        18         18    1          0.894     1    
+15       2013 B        15         14    0.933      0.928     0.967
+16       2014 A        24         22    0.917      0.908     0.959
+17       2014 B        22         14    0.636      0.912     0.685
+18       2015 A        20         20    1          0.863     1    
+19       2015 B        25         18    0.72       0.859     0.794
+20       2016 A        12         10    0.833      0.714     0.931
+21       2016 B        14         10    0.714      0.787     0.814
+22       2017 A         3          3    1          0.726     1    
+23       2017 B         3          2    0.667      0.917     0.714
+24       2018 A         8          8    1          0.782     1    
+25       2018 B         4          1    0.25       0.85      0.286
+26       2019 A         6          6    1          0.71      1    
+27       2019 B         7          5    0.714      0.615     0.854
+28       2020 A         2          2    1          0.836     1    
+29       2020 B         7          6    0.857      0.772     0.94 
+30       2021 A         1          1    1          0.872     1    
+31       2021 B         1          1    1          0.765     1    
+32       2022 A         3          3    1          0.795     1    
+33       2023 A         2          1    0.5        0.688     0.619
+34       2024 A         2          1    0.5        0.307     0.705
+35       2024 B         5          1    0.2        0.55      0.281
+36       2025 A        12          8    0.667      0.384     0.851
+37       2025 B        11          6    0.545      0.445     0.727
+
+--- Saving Results ---
+Saved: entiat_detection_corrected_results.csv
+Saved: entiat_hidden_stray_summary.csv
+Saved: entiat_groupB_undetected_fate_posteriors.csv
+Saved: entiat_corrected_models.RData
+
+--- Generating Visualizations ---
+Saved: entiat_corrected_vs_uncorrected.png
+Warning message:
+Removed 1 row containing missing values or values outside the scale range
+(`geom_vline()`). 
+Saved: entiat_hidden_stray_analysis.png
+Saved: entiat_corrected_return_rates.png
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+
+DETECTION CORRECTION EFFECT ON WELLS INTERACTION ESTIMATE
+==========================================================
+  Standard model:         β = -1.394 [-1.941, -0.870]  P(<0)=1.000
+  Detection-corrected:    β = -1.836 [-2.737, -1.067]  P(<0)=1.000
+  Change in β:            -0.442
+  Interpretation: Detection correction amplifies the Wells effect estimate
+
+HIDDEN STRAY ANALYSIS (53 Undetected Group B Fish)
+====================================================
+  Expected true Entiat returners (missed at ENL): 20.1  (39%)
+  Expected hidden Methow strays:                  1.1  (2%)
+  Expected hidden Okanogan strays:                0.1  (0%)
+  Other/died:                                     29.7  (58%)
+
+  Total expected hidden strays: 1.2 fish (2% of undetected)
+  These hidden strays, if confirmed, would reduce the apparent
+  Wells interaction effect (Group B true Entiat return rate goes UP;
+  true stray rate goes UP too, partially offsetting each other).
+
+DETECTION-CORRECTED RETURN RATES
+==================================
+  Group A: 89.7% → 93.4% (raw → corrected)
+  Group B: 68.0% → 79.1% (raw → corrected)
+  Both groups' true return rates are higher than raw observed rates,
+  but the RELATIVE difference between groups is what drives the
+  Wells interaction coefficient.
+
+======================================================================
+OUTPUT FILES:
+  entiat_corrected_models.RData              — brms model objects
+  entiat_detection_corrected_results.csv     — model comparison table
+  entiat_hidden_stray_summary.csv            — stray analysis summary
+  entiat_groupB_undetected_fate_posteriors.csv — per-fish fate probs
+  entiat_corrected_vs_uncorrected.png        — Wells effect comparison
+  entiat_hidden_stray_analysis.png           — stray analysis figure
+  entiat_corrected_return_rates.png          — annual corrected rates
+======================================================================
+ANALYSIS COMPLETE
+======================================================================

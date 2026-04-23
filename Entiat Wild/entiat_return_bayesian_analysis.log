@@ -1,0 +1,360 @@
+Loading required package: Rcpp
+Loading 'brms' package (version 2.23.0). Useful instructions
+can be found by typing help('brms'). A more detailed introduction
+to the package is available through vignette('brms_overview').
+
+Attaching package: ‘brms’
+
+The following object is masked from ‘package:stats’:
+
+    ar
+
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+This is bayesplot version 1.15.0
+- Online documentation and vignettes at mc-stan.org/bayesplot
+- bayesplot theme set to bayesplot::theme_default()
+   * Does _not_ affect other ggplot2 plots
+   * See ?bayesplot_theme_set for details on theme setting
+
+Attaching package: ‘bayesplot’
+
+The following object is masked from ‘package:brms’:
+
+    rhat
+
+This is posterior version 1.6.1
+
+Attaching package: ‘posterior’
+
+The following object is masked from ‘package:bayesplot’:
+
+    rhat
+
+The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+The following objects are masked from ‘package:base’:
+
+    %in%, match
+
+
+Attaching package: ‘tidybayes’
+
+The following objects are masked from ‘package:brms’:
+
+    dstudent_t, pstudent_t, qstudent_t, rstudent_t
+
+======================================================================
+ENTIAT WILD STEELHEAD - WELLS DAM INTERACTION ANALYSIS
+Bayesian Hierarchical Logistic Regression (brms/Stan)
+======================================================================
+
+--- Loading Data ---
+Loaded 4131 detection rows for 417 unique fish
+Columns: Tag Code, Mark File Name, Site Name, First Time Value, Last Time Value, Site Subbasin Code, Site Subbasin Name, Release Date MMDDYYYY, Species Code, Species Name, Run Code, Run Name, Rear Type Code, Rear Type Name, Release Site Name, Count 
+
+--- Classifying Detection Sites ---
+Detections by type:
+  Entiat River sites:    887 rows (359 fish)
+  ENL (lower Entiat):    331 rows (331 fish)
+  Wells Dam:             202 rows (194 fish)
+  Upstream tribs:        61 rows (46 fish)
+  Rocky Reach (RRF):     417 rows (417 fish)
+  Corridor sites:        2118 rows (417 fish)
+
+--- Establishing Adult RRF Anchor Dates ---
+Fish with Jul-Dec RRF detection (standard adult return): 408
+Fish with RRF detections but none in Jul-Dec (spring/June only): 9
+
+--- Qualifying Spring-RRF Fish ---
+  QUALIFY: 3D9.1C2C44E5C4 — spring RRF 2010-03-17, corridor site: BO1 - Bonneville Bradford Is. Ladder (2009-08-16)
+  QUALIFY: 3D9.1C2D1173CB — spring RRF 2013-05-29, corridor site: BO3 - Bonneville WA Shore Ladder/AFF (2013-05-01)
+  QUALIFY: 3D9.1C2D473C57 — spring RRF 2015-03-29, corridor site: BO3 - Bonneville WA Shore Ladder/AFF (2014-08-13)
+  QUALIFY: 3D9.1C2DA13E28 — spring RRF 2016-04-12, corridor site: BO3 - Bonneville WA Shore Ladder/AFF (2015-07-27)
+  QUALIFY: 3D9.1C2DE3B2A9 — spring RRF 2017-04-14, corridor site: BO3 - Bonneville WA Shore Ladder/AFF (2016-08-19)
+  QUALIFY: 3D9.1C2DE3CB54 — spring RRF 2016-05-30, corridor site: BO4 - Bonneville WA Ladder Slots (2016-05-13)
+  QUALIFY: 3D9.1C2DE55E7C — spring RRF 2015-04-22, corridor site: BO1 - Bonneville Bradford Is. Ladder (2014-08-11)
+  QUALIFY: 3DD.00778E5048 — spring RRF 2022-04-23, corridor site: BO3 - Bonneville WA Shore Ladder/AFF (2021-09-08)
+  QUALIFY: 3DD.0077A2A88D — spring RRF 2021-04-07, corridor site: BO4 - Bonneville WA Ladder Slots (2020-07-27)
+
+Spring-RRF fish qualified: 9 / 9
+
+--- Qualifying June-Only RRF Fish ---
+June-only RRF fish to evaluate: 0
+
+June-only fish qualified: 0 / 0
+Total fish with valid adult RRF anchor: 417
+
+--- Filtering to Post-Anchor Detections ---
+Fish retained after anchor filter: 417
+
+Return year distribution:
+
+2006 2007 2008 2009 2010 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 2021 
+   2    6    5   53   53   45   20   33   48   47   27    6   12   13    9    2 
+2022 2023 2024 2025 
+   4    2    7   23 
+
+--- Building Per-Fish Detection Flags ---
+Total fish: 417
+  Wells-detected:         194
+  Last in upstream trib:  13 (strays to exclude from Group B)
+  Entiat-detected:        325
+
+--- Assigning Groups ---
+Group assignments:
+
+    A     B Stray 
+  223   181    13 
+
+Analysis dataset: 404 fish (Group A=223, Group B=181)
+
+Entiat detection rate by group:
+# A tibble: 2 × 4
+  group     n n_detected pct_detected
+  <chr> <int>      <int>        <dbl>
+1 A       223        200         89.7
+2 B       181        123         68  
+
+Return season by group:
+# A tibble: 3 × 4
+  group ReturnSeason     n pct_entiat
+  <chr> <chr>        <int>      <dbl>
+1 A     Fall           214       89.7
+2 A     Spring           9       88.9
+3 B     Fall           181       68  
+
+--- Merging Harvest Status ---
+Harvest status distribution:
+        Group
+Harvest    A   B
+  Closed  37  36
+  Open   186 145
+
+--- Merging Spill Data for Group B ---
+Loaded pre-computed spill data for 1321 fish
+Group B fish with spill data:    160
+Group B fish without spill data: 21
+
+--- Saving Analysis Datasets ---
+Saved: entiat_analysis_all_fish.csv
+Saved: entiat_analysis_groupB.csv
+
+======================================================================
+MODEL 1: All Fish — Wells Interaction + Harvest + Year RE
+n = 404 fish across 20 return years
+======================================================================
+
+Model 1 Summary:
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatDetected ~ wells_interaction + harvest_open + (1 | ReturnYearFactor) 
+   Data: fish_AB (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.73      0.31     0.18     1.39 1.00     2948     3133
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             2.32      0.46     1.44     3.24 1.00     9004     7947
+wells_interaction    -1.39      0.27    -1.94    -0.87 1.00    15283     8366
+harvest_open         -0.31      0.48    -1.27     0.59 1.00     7396     7171
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1 Results ---
+Wells Interaction:
+  beta_mean = -1.394  (OR = 0.248)
+  95% HDI   [-1.950, -0.882]
+  P(beta > 0) = 0.0000  [i.e. P(Wells INCREASES return)]
+  P(beta < 0) = 1.0000  [i.e. P(Wells DECREASES return)]
+
+Harvest Status (Open vs Closed):
+  beta_mean = -0.306  (OR = 0.736)
+  95% HDI   [-1.271, 0.592]
+  P(beta > 0) = 0.2599
+
+Year-level variability:
+  sigma_year = 0.727 (mean)
+
+Diagnostics (fixed effects):
+  Rhat range:    [1.000, 1.000]
+  Bulk ESS range: [7396, 15283]
+
+======================================================================
+MODEL 1b: All Fish — Wells + Harvest + Season + Year RE
+======================================================================
+
+Model 1b Summary:
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatDetected ~ wells_interaction + harvest_open + spring_return + (1 | ReturnYearFactor) 
+   Data: fish_AB (Number of observations: 404) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 20) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.72      0.30     0.19     1.37 1.00     3312     3863
+
+Regression Coefficients:
+                  Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept             2.33      0.45     1.45     3.26 1.00     9408     8726
+wells_interaction    -1.40      0.27    -1.94    -0.88 1.00    14988     8274
+harvest_open         -0.31      0.47    -1.26     0.60 1.00     7904     8670
+spring_return        -0.02      0.76    -1.45     1.55 1.00    18048     8922
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 1b Results ---
+Wells Interaction (with season covariate):
+  beta_mean = -1.402  (OR = 0.246)
+  95% HDI   [-1.939, -0.882]
+  P(beta < 0) = 1.0000
+
+Spring Return Season:
+  beta_mean = -0.025  (OR = 0.976)
+  95% HDI   [-1.548, 1.448]
+  P(beta < 0) = 0.5274
+
+======================================================================
+MODEL 2: Group B Only — Spill + Harvest + Year RE
+n = 160 fish with spill data
+======================================================================
+Group B fish with complete spill data: 160
+Return years covered: 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021
+Entiat detection rate (Group B with spill): 70.6%
+
+Model 2 Summary:
+ Family: bernoulli 
+  Links: mu = logit 
+Formula: EntiatDetected ~ SpringSpillHours_z + FallSpillHours_z + harvest_open + (1 | ReturnYearFactor) 
+   Data: group_b_spill (Number of observations: 160) 
+  Draws: 4 chains, each with iter = 4500; warmup = 1500; thin = 1;
+         total post-warmup draws = 12000
+
+Multilevel Hyperparameters:
+~ReturnYearFactor (Number of levels: 15) 
+              Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+sd(Intercept)     0.35      0.27     0.01     1.03 1.00     3789     4586
+
+Regression Coefficients:
+                   Estimate Est.Error l-95% CI u-95% CI Rhat Bulk_ESS Tail_ESS
+Intercept              0.82      0.42     0.01     1.68 1.00    11195     8130
+SpringSpillHours_z     0.06      0.24    -0.40     0.55 1.00     9401     7369
+FallSpillHours_z      -0.05      0.23    -0.50     0.42 1.00     9564     7356
+harvest_open           0.12      0.48    -0.82     1.05 1.00    10975     8711
+
+Draws were sampled using sampling(NUTS). For each parameter, Bulk_ESS
+and Tail_ESS are effective sample size measures, and Rhat is the potential
+scale reduction factor on split chains (at convergence, Rhat = 1).
+
+--- Model 2 Results ---
+Spring Spill Hours (std):
+  beta = 0.063 (OR=1.066), 95% HDI [-0.401, 0.550], P(>0)=0.601
+Fall Spill Hours (std):
+  beta = -0.045 (OR=0.956), 95% HDI [-0.506, 0.419], P(>0)=0.412
+Harvest Open:
+  beta = 0.122 (OR=1.130), 95% HDI [-0.815, 1.055], P(>0)=0.606
+Year variability: sigma_year = 0.354
+
+--- Saving Results Summary ---
+Saved: entiat_return_bayesian_results.csv
+Saved: entiat_year_summary.csv
+
+--- Generating Visualizations ---
+Warning message:
+No shared levels found between `names(values)` of the manual scale and the
+data's fill values. 
+Saved: entiat_data_overview.png
+Saved: entiat_model1_posteriors.png
+Saved: entiat_model1b_season.png
+Saved: entiat_year_effects.png
+`geom_smooth()` using formula = 'y ~ x'
+Saved: entiat_model2_spill.png
+Warning messages:
+1: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead. 
+2: The following aesthetics were dropped during statistical transformation: size.
+ℹ This can happen when ggplot fails to infer the correct grouping structure in
+  the data.
+ℹ Did you forget to specify a `group` aesthetic or to convert a numerical
+  variable into a factor? 
+Generating trace plots for Model 1...
+No divergences to plot.
+Warning message:
+Argument 'pars' is deprecated. Please use 'variable' instead. 
+Saved: entiat_trace_plots_model1.png
+
+--- Saving Model Objects ---
+Saved: entiat_bayesian_models.RData
+
+======================================================================
+FINAL SUMMARY
+======================================================================
+
+Dataset: 417 wild Entiat steelhead across 20 return years
+  Group A (Rocky Reach only, no Wells): 223 fish
+  Group B (Wells interaction, non-stray): 181 fish
+  Excluded strays (last in Methow/Okanogan): 13 fish
+
+Entiat River detection rates:
+  Group A: 89.7% (200/223)
+  Group B: 68.0% (123/181)
+
+MODEL 1 — Wells Interaction Effect (all fish, year random effect):
+  beta_wells = -1.394 (95% HDI: [-1.950, -0.882])
+  Odds Ratio = 0.248
+  P(Wells DECREASES Entiat return) = 1.0000
+
+  beta_harvest = -0.306 (95% HDI: [-1.271, 0.592])
+  Odds Ratio = 0.736
+  P(harvest open increases return) = 0.2599
+
+MODEL 1b — Wells Effect After Controlling for Spring Return Season:
+  beta_wells = -1.402 (95% HDI: [-1.939, -0.882])
+  Odds Ratio = 0.246
+  P(Wells DECREASES Entiat return) = 1.0000
+  [Robustness check: effect should persist after accounting for
+   lower spring detection efficiency]
+MODEL 2 — Spill at Wells Predicting Group B Entiat Return:
+  Spring Spill Hours: beta=0.063, OR=1.066, P(>0)=0.601
+  Fall Spill Hours:   beta=-0.045, OR=0.956, P(>0)=0.412
+  Harvest Open:       beta=0.122, OR=1.130, P(>0)=0.606
+  [None of the spill/harvest metrics predict within-group variation]
+
+OUTPUT FILES WRITTEN:
+  entiat_analysis_all_fish.csv          — per-fish analysis dataset
+  entiat_analysis_groupB.csv            — Group B fish with spill data
+  entiat_year_summary.csv               — annual summary table
+  entiat_return_bayesian_results.csv    — model results table
+  entiat_data_overview.png              — data overview figure
+  entiat_model1_posteriors.png          — Model 1 posterior distributions
+  entiat_model1b_season.png             — season covariate robustness check
+  entiat_year_effects.png               — year random effects
+  entiat_model2_spill.png               — Model 2 spill analysis
+  entiat_trace_plots_model1.png         — MCMC trace plots
+  entiat_bayesian_models.RData          — saved brms model objects
+
+======================================================================
+ANALYSIS COMPLETE
+======================================================================

@@ -1,0 +1,5 @@
+Model,Beta_Mean,CI_Lower,CI_Upper,OR,P_negative
+Standard (no detection correction),-1.3484,-1.8813,-0.8342,0.2597,1
+Standard + season covariate,-1.3543,-1.8862,-0.8293,0.2581,1
+Detection-corrected,-1.8357,-2.7368,-1.0666,0.1595,1
+Detection-corrected + season,-1.8355,-2.7048,-1.0623,0.1595,1
