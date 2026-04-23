@@ -82,6 +82,7 @@ raw_main <- read_csv("EntiatWildSteel.csv", show_col_types = FALSE) %>%
   mutate(first_dt = mdy_hm(`First Time Value`))
 
 load("gateway_bayesian_models.RData")   # fit_enl, flow_enl, entiat
+gc()
 
 fish_df <- fish_df %>% mutate(rrf_anchor = as_datetime(rrf_anchor))
 
@@ -120,22 +121,24 @@ predict_p_enl_at_date <- function(entry_date, return_year) {
 }
 
 cat("Computing year x season mean p_enl lookup...\n")
-season_means <- flow_enl %>%
+season_agg <- flow_enl %>%
   filter(!is.na(discharge)) %>%
   mutate(yr     = year(date),
          season = if_else(month(date) %in% 1:6, "spring", "fall"),
          lq_s   = (log(discharge) - enl_logq_mean) / enl_logq_sd,
          yr_c   = yr - enl_base_year) %>%
   group_by(yr, season) %>%
-  summarise(mean_lq_s = mean(lq_s), yr_c = first(yr_c), .groups = "drop") %>%
-  rowwise() %>%
-  mutate(mean_p_enl = mean(posterior_epred(
-    fit_enl,
-    newdata = data.frame(log_q_s  = mean_lq_s,
-                         log_q2_s = mean_lq_s^2,
-                         year     = yr_c),
-    allow_new_levels = TRUE, sample_new_levels = "gaussian"))) %>%
-  ungroup()
+  summarise(mean_lq_s = mean(lq_s), yr_c = first(yr_c), .groups = "drop")
+
+# Batch all posterior_epred calls at once instead of one per row
+nd_season <- data.frame(log_q_s  = season_agg$mean_lq_s,
+                        log_q2_s = season_agg$mean_lq_s^2,
+                        year     = season_agg$yr_c)
+pred_season <- posterior_epred(fit_enl, newdata = nd_season,
+                               allow_new_levels = TRUE, sample_new_levels = "gaussian")
+season_means <- season_agg %>%
+  mutate(mean_p_enl = colMeans(pred_season))
+rm(pred_season, nd_season, season_agg); gc()
 
 overall_spring_p <- mean(season_means$mean_p_enl[season_means$season == "spring"])
 overall_fall_p   <- mean(season_means$mean_p_enl[season_means$season == "fall"])
@@ -153,34 +156,65 @@ cat(sprintf("  Overall spring mean p_enl: %.3f\n", overall_spring_p))
 cat(sprintf("  Overall fall mean p_enl:   %.3f\n\n", overall_fall_p))
 
 # ---- Per-fish entry-date p_enl -----------------------------------------------
+# Collect (date, year) combos first, batch-predict, then look up per fish.
 cat("Computing per-fish entry-date p_enl...\n")
-entry_corrections <- map_dfr(fish_df$TagCode, function(tc) {
-  fm     <- fish_df   %>% filter(TagCode == tc)
-  dets   <- raw_main  %>% filter(tag == tc) %>% arrange(first_dt)
-  anchor <- as_datetime(fm$rrf_anchor)
 
+fish_entry_meta <- map_dfr(fish_df$TagCode, function(tc) {
+  fm     <- fish_df  %>% filter(TagCode == tc)
+  dets   <- raw_main %>% filter(tag == tc) %>% arrange(first_dt)
+  anchor <- as_datetime(fm$rrf_anchor)
   ent_dets <- dets %>% filter(site %in% entiat_all_sites, first_dt > anchor)
 
   if (nrow(ent_dets) > 0) {
-    entry_date  <- min(ent_dets$first_dt)
+    entry_date  <- as.Date(min(ent_dets$first_dt))
     entry_month <- month(entry_date)
-    p_entry     <- predict_p_enl_at_date(entry_date, fm$ReturnYear)
-    if (is.na(p_entry)) {
-      entry_seas <- if_else(entry_month %in% 1:6, "spring", "fall")
-      p_entry    <- get_seasonal_p_enl(fm$ReturnYear, entry_seas)
-    }
+    has_date    <- TRUE
   } else {
-    # Not detected: use anchor-season seasonal mean
+    entry_date  <- as.Date(anchor)
     entry_month <- month(anchor)
-    anchor_seas <- if_else(entry_month %in% 1:6, "spring", "fall")
-    p_entry     <- get_seasonal_p_enl(fm$ReturnYear, anchor_seas)
-    if (is.na(p_entry)) p_entry <- fm$p_enl
+    has_date    <- FALSE
   }
-
-  tibble(TagCode     = tc,
-         p_enl_entry = p_entry,
-         spring_entry = as.integer(entry_month %in% 1:6))
+  tibble(TagCode = tc, entry_date = entry_date, entry_month = entry_month,
+         ReturnYear = fm$ReturnYear, has_date = has_date, p_enl_fallback = fm$p_enl)
 })
+
+# Build batch newdata for all fish that have a flow-matched date
+unique_dates <- fish_entry_meta %>%
+  filter(has_date) %>%
+  left_join(flow_enl %>% mutate(date = as.Date(date)), by = c("entry_date" = "date")) %>%
+  select(entry_date, ReturnYear, discharge) %>%
+  distinct() %>%
+  filter(!is.na(discharge)) %>%
+  mutate(lq_s = (log(discharge) - enl_logq_mean) / enl_logq_sd,
+         yr_c = ReturnYear - enl_base_year)
+
+if (nrow(unique_dates) > 0) {
+  nd_dates  <- data.frame(log_q_s  = unique_dates$lq_s,
+                          log_q2_s = unique_dates$lq_s^2,
+                          year     = unique_dates$yr_c)
+  pred_dates <- posterior_epred(fit_enl, newdata = nd_dates,
+                                allow_new_levels = TRUE, sample_new_levels = "gaussian")
+  unique_dates$p_enl_pred <- colMeans(pred_dates)
+  rm(pred_dates, nd_dates); gc()
+} else {
+  unique_dates$p_enl_pred <- numeric(0)
+}
+
+entry_corrections <- fish_entry_meta %>%
+  left_join(unique_dates %>% select(entry_date, ReturnYear, p_enl_pred),
+            by = c("entry_date", "ReturnYear")) %>%
+  mutate(
+    entry_seas = if_else(entry_month %in% 1:6, "spring", "fall"),
+    p_enl_seasonal = map2_dbl(ReturnYear, entry_seas, get_seasonal_p_enl),
+    p_enl_entry = case_when(
+      !is.na(p_enl_pred)   ~ p_enl_pred,
+      !is.na(p_enl_seasonal) ~ p_enl_seasonal,
+      TRUE                 ~ p_enl_fallback
+    ),
+    spring_entry = as.integer(entry_month %in% 1:6)
+  ) %>%
+  select(TagCode, p_enl_entry, spring_entry)
+
 cat(sprintf("  Computed entry p_enl for %d fish\n\n", nrow(entry_corrections)))
 
 cat(sprintf("Loaded %d fish\n", nrow(fish_df)))
@@ -259,6 +293,7 @@ cat("\n--- Loading Standard (Uncorrected) Models ---\n")
 
 if (file.exists("entiat_bayesian_models.RData")) {
   load("entiat_bayesian_models.RData")
+  gc()
   cat("Loaded standard models\n")
   standard_post <- as_draws_df(fit_model1)
   beta_wells_std    <- standard_post$b_wells_interaction
@@ -368,6 +403,7 @@ fit_corrected_m1 <- brm(
   refresh  = 500
 )
 
+gc()
 cat("\nModel 1c Summary:\n")
 print(summary(fit_corrected_m1))
 
@@ -419,6 +455,7 @@ fit_corrected_m1d <- brm(
   refresh  = 500
 )
 
+gc()
 cat("\nModel 1d Summary:\n")
 print(summary(fit_corrected_m1d))
 
