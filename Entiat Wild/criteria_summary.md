@@ -31,70 +31,71 @@ This document summarizes the four outcome criteria used to define successful ret
 | Model | β | OR | 95% CI | P(β < 0) |
 |-------|---|----|--------|----------|
 | Standard | −1.348 | 0.26 | [−1.881, −0.834] | 1.000 |
-| Detection-corrected | −1.836 | 0.16 | [−2.737, −1.067] | 1.000 |
+| Detection-corrected | −2.046 | 0.13 | [−3.262, −0.923] | 0.999 |
 
 Wells Dam interaction is strongly associated with reduced broad return probability. The detection-corrected model accounts for the possibility that some Group A fish returned but were not detected at ENL, which would bias the observed Group A rate downward; correcting for this makes the Wells effect appear larger.
 
 ---
 
-## Criterion 2 — Original Strict (All-Fall Rule)
+## Criterion 2 — Original Strict (Confirmed Upstream Passage)
 
-**Definition:** All fish are treated as fall returners regardless of their actual Entiat entry date. A fish is considered to have spawned if it was detected at ENL **and** at least one upstream Entiat site (ENM or higher) within 18 months of the fall RRF anchor.
+**Definition:** A fish is considered to have spawned if it was detected at any Entiat subbasin site AND at least one upstream Entiat site (ENM or higher) within 18 months of the fall RRF anchor. Fish confirmed above ENM (with or without an ENL gateway detection) are credited as successful, as confirmed upstream passage constitutes strong evidence of spawning.
 
-**Rationale:** The strict criterion requires evidence of upstream passage, not just arrival at the river mouth. The 18-month window captures one complete spawning season after the anchor event. Because all fish have fall RRF anchors, applying the fall criterion uniformly (ENL + upstream required) is conservative and consistent. However, it misclassifies fish that actually entered the Entiat in spring — those fish typically spawn closer to the mouth and may not be detected at upstream fixed arrays, even when present.
-
-**Return rates:**
-
-| Group | n | Spawned | Rate |
-|-------|---|---------|------|
-| A | 223 | 136 | 61.0% |
-| B | 181 | 91 | 50.3% |
-
-**Model results — Wells Dam effect:**
-
-| Model | β | OR | 95% CI | P(β < 0) |
-|-------|---|----|--------|----------|
-| Standard | −0.517 | 0.60 | [−0.937, −0.095] | 0.992 |
-| Detection-corrected | −0.671 | 0.51 | [−1.191, −0.148] | 0.995 |
-
-The Wells effect is credible and robust. The detection-corrected estimate is modestly larger, reflecting upward correction for Group A fish that returned in spring (when ENL detection efficiency is lower due to higher flows) but were not observed.
-
----
-
-## Criterion 3 — Reclassified Strict (Actual Entry Season)
-
-**Definition:** Each fish is reclassified by its actual Entiat entry season — the calendar month of its first post-anchor Entiat site detection — rather than the RRF anchor season (which is always fall by design). Spring-entry fish (first Entiat detection January–June) are scored under a spring criterion: detection at ENL within 18 months is sufficient for success. Fall-entry Group A fish retain the strict fall criterion (ENL + upstream within 18 months). Fall-entry Group B fish are credited as successful if they have any Entiat detection at all, since navigating back past Wells Dam to reach the Entiat already demonstrates homing success; ENL detection alone is considered sufficient evidence.
-
-For spring-entry fish, the ENL detection probability used in the detection-corrected model is recomputed at the actual spring entry date's flow (rather than the fall anchor date's flow), since spring flows at ENL are typically higher and detection efficiency lower.
-
-**Rationale:** The all-fall rule (Criterion 2) underestimates spawning success for the roughly half of fish that overwinter between Rocky Reach and the Entiat mouth and then enter the system in spring. Those fish spawn in the lower Entiat reach and are correctly scored as successful when detected at ENL, without requiring upstream array detections they may never encounter. Reclassifying by actual entry season produces a more biologically accurate outcome.
-
-**Key reclassification results (Group A):**
-
-- Of 223 Group A fish, 113 (50.7%) entered the Entiat in spring; 87 (39.0%) entered in fall; 23 (10.3%) were never detected in the Entiat.
-- 16 spring-entry Group A fish gained a spawned=1 coding under C3 that they lacked under C2 (previously required upstream detection they did not have).
-- 2 fall-entry Group A fish that were incorrectly scored 0 under C2 due to a date-window calculation error were corrected to 1.
-
-**Key reclassification results (Group B):**
-
-- 4 Group B fall-entry fish (2 ENL-only, 2 with upstream detections but no ENL) gained spawned=1 coding; under Criterion 2 these fish lacked ENL + upstream in window, but under the Group B rule any Entiat detection constitutes success.
-- 5 additional Group B spring-entry fish that were incorrectly scored 0 under C2 due to a date-window calculation error were corrected to 1.
+**Rationale:** The strict criterion requires evidence of upstream passage, not just arrival at the river mouth or subbasin. The 18-month window captures one complete spawning season after the anchor event. This is more conservative than C1 (broad detection) because ENL-only detections in fall fish — where ENL is at the river mouth with no spawning habitat below — are not sufficient for success unless upstream confirmation follows.
 
 **Return rates:**
 
 | Group | n | Spawned | Rate |
 |-------|---|---------|------|
-| A | 223 | 150 | 67.3% |
+| A | 223 | 168 | 75.3% |
 | B | 181 | 108 | 59.7% |
 
 **Model results — Wells Dam effect:**
 
 | Model | β | OR | 95% CI | P(β < 0) |
 |-------|---|----|--------|----------|
-| Standard | −0.372 | 0.69 | [−0.801, 0.051] | 0.958 |
-| Detection-corrected | −0.518 | 0.60 | [−1.095, 0.055] | 0.964 |
+| Standard | −0.801 | 0.45 | [−1.246, −0.352] | 1.000 |
+| Detection-corrected | −1.115 | 0.33 | [−1.782, −0.488] | 1.000 |
 
-The Wells effect is attenuated relative to Criterion 2, and the 95% credible interval includes zero under both model specifications. The reclassification raises Group B's success rate more than Group A's — the Group B fall-entry fix and the correction of misclassified spring-entry Group B fish together add proportionally more to Group B. The effect remains directionally consistent (P(β < 0) = 0.958–0.964), but is less strongly supported at this outcome definition.
+The Wells effect is highly credible under both model specifications. The detection-corrected estimate is larger, reflecting upward correction for Group A fish that returned but were missed at ENL — particularly spring-entry fish encountering higher flows.
+
+---
+
+## Criterion 3 — Reclassified Strict (Actual Entry Season)
+
+**Definition:** Each fish is reclassified by its actual Entiat entry season — the calendar month of its first post-anchor Entiat site detection — rather than the RRF anchor season (which is always fall by design). Spring-entry fish (first Entiat detection January–June) are scored under a spring criterion: detection at ENL within 18 months is sufficient for success. Fall-entry Group A fish retain the strict criterion (confirmed upstream Entiat passage within 18 months). Fall-entry Group B fish are credited as successful if they have any Entiat detection at all, since navigating back past Wells Dam to reach the Entiat already demonstrates homing success.
+
+For spring-entry fish, the ENL detection probability used in the detection-corrected model is recomputed at the actual spring entry date's flow (rather than the fall anchor date's flow), since spring flows at ENL are typically higher and detection efficiency lower.
+
+**Rationale:** Some fish overwinter between Rocky Reach and the Entiat mouth and enter the system in spring. Those fish spawn in the lower Entiat reach and may not be detected at upstream fixed arrays, even when present. Reclassifying by actual entry season and applying the appropriate seasonal criterion produces a more biologically accurate outcome. However, this criterion requires ENL detection specifically for spring-entry fish, which means fish confirmed upstream without an ENL gateway detection are scored more conservatively than under C2.
+
+**Key reclassification results (Group A):**
+
+- Of 223 Group A fish, 113 (50.7%) entered the Entiat in spring; 87 (39.0%) entered in fall; 23 (10.3%) were never detected in the Entiat.
+- Spring-entry Group A fish with ENL detections are credited under the spring criterion (ENL alone is sufficient), gaining credit that fall-entry criteria would withhold.
+- Spring-entry Group A fish with only upstream detections (no ENL gateway detection) are scored 0 under C3 (ENL required for spring criterion), whereas under C2 confirmed upstream passage was sufficient.
+
+**Key reclassification results (Group B):**
+
+- Fall-entry Group B fish are credited for any Entiat detection under C3, relaxing the upstream confirmation requirement.
+- Spring-entry Group B fish with ENL detections are credited under the spring criterion.
+- Group B fish confirmed upstream in the Entiat but lacking an ENL detection are scored 0 under C3's spring criterion if spring-entry, producing a small set of reclassification losses that offset gains elsewhere. Net Group B count is unchanged from C2 (n=108).
+
+**Return rates:**
+
+| Group | n | Spawned | Rate |
+|-------|---|---------|------|
+| A | 223 | 153 | 68.6% |
+| B | 181 | 108 | 59.7% |
+
+**Model results — Wells Dam effect:**
+
+| Model | β | OR | 95% CI | P(β < 0) |
+|-------|---|----|--------|----------|
+| Standard | −0.444 | 0.64 | [−0.864, −0.015] | 0.979 |
+| Detection-corrected | −0.629 | 0.53 | [−1.235, −0.048] | 0.983 |
+
+The Wells effect is attenuated relative to C2 and the credible intervals barely exclude zero under both specifications. P(β < 0) remains high (0.979–0.983), indicating the effect is directionally consistent though weaker than under the broader criteria. The attenuation reflects that reclassification by actual entry season credits some spring-entry Group A fish with ENL-only detections that were missed under the fall-entry rule (raising Group A), while simultaneously removing credit from Group A fish confirmed upstream without an ENL gateway detection that were counted under C2.
 
 ---
 
@@ -120,17 +121,17 @@ Five Group A fall-entry fish were recoded from spawned=0 to spawned=1:
 
 | Group | n | Spawned | Rate |
 |-------|---|---------|------|
-| A | 223 | 155 | 69.5% |
+| A | 223 | 158 | 70.9% |
 | B | 181 | 108 | 59.7% |
 
 **Model results — Wells Dam effect:**
 
 | Model | β | OR | 95% CI | P(β < 0) |
 |-------|---|----|--------|----------|
-| Standard | −0.476 | 0.62 | [−0.898, −0.058] | 0.987 |
-| Detection-corrected | −0.691 | 0.50 | [−1.279, −0.113] | 0.991 |
+| Standard | −0.548 | 0.58 | [−0.976, −0.126] | 0.994 |
+| Detection-corrected | −0.772 | 0.46 | [−1.390, −0.183] | 0.995 |
 
-Crediting the entering fish increases Group A's rate (69.5%) without changing Group B (59.7%), widening the gap and strengthening the Wells effect relative to C3. The 95% credible intervals exclude zero under both specifications, and P(β < 0) returns to 0.987–0.991. The ENL sensitivity is therefore a *conservative* check — if anything, applying directional evidence makes the Wells Dam effect appear larger, not smaller.
+Crediting the entering fish increases Group A's rate (70.9%) without changing Group B (59.7%), widening the gap and strengthening the Wells effect relative to C3. The 95% credible intervals exclude zero under both specifications, and P(β < 0) rises to 0.994–0.995. The ENL sensitivity is therefore a *conservative* check — if anything, applying directional evidence makes the Wells Dam effect appear larger, not smaller.
 
 ---
 
@@ -141,27 +142,27 @@ Crediting the entering fish increases Group A's rate (69.5%) without changing Gr
 | Criterion | Group A (n=223) | Group B (n=181) | Gap (A−B) |
 |-----------|-----------------|-----------------|-----------|
 | C1 — Broad | 200 (89.7%) | 123 (68.0%) | 21.7 pp |
-| C2 — Original strict | 136 (61.0%) | 91 (50.3%) | 10.7 pp |
-| C3 — Reclassified | 150 (67.3%) | 108 (59.7%) | 7.6 pp |
-| C4 — ENL sensitivity | 155 (69.5%) | 108 (59.7%) | 9.8 pp |
+| C2 — Strict (upstream confirmed) | 168 (75.3%) | 108 (59.7%) | 15.6 pp |
+| C3 — Reclassified | 153 (68.6%) | 108 (59.7%) | 8.9 pp |
+| C4 — ENL sensitivity | 158 (70.9%) | 108 (59.7%) | 11.2 pp |
 
 **Wells Dam effect (β) across criteria and model types:**
 
 | Criterion | Standard β | OR | CI | P(β<0) | Det-corr β | OR | CI | P(β<0) |
 |-----------|-----------|----|----|--------|-----------|----|----|--------|
-| C1 — Broad | −1.348 | 0.26 | [−1.881, −0.834] | 1.000 | −1.836 | 0.16 | [−2.737, −1.067] | 1.000 |
-| C2 — Original strict | −0.517 | 0.60 | [−0.937, −0.095] | 0.992 | −0.671 | 0.51 | [−1.191, −0.148] | 0.995 |
-| C3 — Reclassified | −0.372 | 0.69 | [−0.801, 0.051] | 0.958 | −0.518 | 0.60 | [−1.095, 0.055] | 0.964 |
-| C4 — ENL sensitivity | −0.476 | 0.62 | [−0.898, −0.058] | 0.987 | −0.691 | 0.50 | [−1.279, −0.113] | 0.991 |
+| C1 — Broad | −1.348 | 0.26 | [−1.881, −0.834] | 1.000 | −2.046 | 0.13 | [−3.262, −0.923] | 0.999 |
+| C2 — Strict upstream | −0.801 | 0.45 | [−1.246, −0.352] | 1.000 | −1.115 | 0.33 | [−1.782, −0.488] | 1.000 |
+| C3 — Reclassified | −0.444 | 0.64 | [−0.864, −0.015] | 0.979 | −0.629 | 0.53 | [−1.235, −0.048] | 0.983 |
+| C4 — ENL sensitivity | −0.548 | 0.58 | [−0.976, −0.126] | 0.994 | −0.772 | 0.46 | [−1.390, −0.183] | 0.995 |
 
 **Key patterns:**
 
 - The negative Wells Dam effect is present and directionally consistent across all four criteria and both model types.
 - C1 (broad) shows the strongest effect because the raw detection gap between groups is largest when no movement threshold is required.
-- C3 (reclassified) shows the weakest effect, with the 95% credible interval slightly straddling zero. Reclassification raises Group B's rate more than Group A's, narrowing the gap to 7.6 percentage points. This is the most biologically defensible outcome definition, but also the most conservative estimate of the Wells effect.
-- C4 (ENL sensitivity) recovers most of the C2 effect magnitude and the credible interval returns to excluding zero. Because the directionality credit raises Group A but not Group B, the gap widens back toward C2 levels.
-- Detection correction consistently strengthens the estimated Wells effect, reflecting that imperfect ENL detection (especially during high-flow spring conditions) more frequently causes Group A spring-entry fish to appear unsuccessful when they are not.
-- The consistency of direction and the P(β < 0) values of 0.958–1.000 across all criteria provide robust evidence that Wells Dam interaction is associated with reduced Entiat return probability, regardless of which outcome definition is applied.
+- C3 (reclassified) shows the weakest effect — the 95% credible intervals barely exclude zero under both model specifications. Reclassifying by actual entry season narrows the gap to 8.9 percentage points; the spring criterion credits some Group A fish with ENL-only detections but simultaneously removes credit for Group A fish confirmed upstream without an ENL gateway detection (previously counted under C2), producing a net reduction in Group A relative to C2.
+- C4 (ENL sensitivity) recovers part of the C2–C3 gap: crediting fall-entry Group A fish with upstream-directed ENL antenna patterns raises Group A to 70.9% (11.2 pp gap), and the credible interval excludes zero under both specifications (P(β < 0) = 0.994–0.995).
+- Detection correction consistently strengthens the estimated Wells effect across all criteria, reflecting that imperfect ENL detection — especially during high-flow spring conditions — more frequently causes Group A spring-entry fish to appear unsuccessful when they are not.
+- The consistency of direction and the P(β < 0) values of 0.979–1.000 across all criteria provide robust evidence that Wells Dam interaction is associated with reduced Entiat return probability, regardless of which outcome definition is applied.
 
 ---
 
