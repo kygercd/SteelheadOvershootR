@@ -177,8 +177,21 @@ fish_clean <- map_dfr(
     # Outcome: upstream detection = success; ENL-only = failure
     spawned <- as.integer(has_upstream)
 
-    # p_enl correction: use actual ENL entry date, or seasonal mean if no ENL
-    if (has_enl) {
+    # Compound detection: fish detected at ENL in both fall and spring made two
+    # separate crossing attempts → p_detect = 1 - (1-p_fall)(1-p_spring)
+    enl_fall_dts   <- enl_in$first_dt[month(enl_in$first_dt) %in% 7:12]
+    enl_spring_dts <- enl_in$first_dt[month(enl_in$first_dt) %in% 1:6]
+    has_fall_enl   <- length(enl_fall_dts) > 0
+    has_spring_enl <- length(enl_spring_dts) > 0
+
+    if (has_fall_enl && has_spring_enl) {
+      p_fall   <- predict_p_enl_at_date(as.Date(min(enl_fall_dts)), fm$ReturnYear)
+      p_spring <- predict_p_enl_at_date(as.Date(min(enl_spring_dts)), fm$ReturnYear)
+      if (is.na(p_fall))   p_fall   <- get_seasonal_p_enl(fm$ReturnYear, "fall")
+      if (is.na(p_spring)) p_spring <- get_seasonal_p_enl(fm$ReturnYear, "spring")
+      p_enl_corr  <- 1 - (1 - p_fall) * (1 - p_spring)
+      entry_month <- month(as.Date(min(enl_spring_dts)))  # classify by spring crossing
+    } else if (has_enl) {
       enl_date    <- min(enl_in$first_dt)
       p_enl_corr  <- predict_p_enl_at_date(enl_date, fm$ReturnYear)
       if (is.na(p_enl_corr)) p_enl_corr <- fm$p_enl

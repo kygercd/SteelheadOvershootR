@@ -181,12 +181,17 @@ fish_entry_meta <- map_dfr(fish_df$TagCode, function(tc) {
   dets   <- raw_main %>% filter(tag == tc) %>% arrange(first_dt)
   anchor <- as_datetime(fm$rrf_anchor)
 
-  # p_enl should reflect the flow conditions when the fish was at ENL.
-  # Priority: (1) first ENL detection date, (2) first upstream detection date
-  # as a proxy (fish crossed ENL undetected), (3) anchor date fallback.
   enl_dets <- dets %>% filter(site == "ENL - Lower Entiat River", first_dt > anchor)
   up_dets  <- dets %>% filter(site %in% entiat_upstream, first_dt > anchor)
 
+  # Identify compound crossings: detected at ENL in both fall and spring
+  enl_fall_dts   <- enl_dets$first_dt[month(enl_dets$first_dt) %in% 7:12]
+  enl_spring_dts <- enl_dets$first_dt[month(enl_dets$first_dt) %in% 1:6]
+  fall_enl_date  <- if (length(enl_fall_dts)   > 0) as.Date(min(enl_fall_dts))   else as.Date(NA)
+  spring_enl_date <- if (length(enl_spring_dts) > 0) as.Date(min(enl_spring_dts)) else as.Date(NA)
+  has_compound   <- !is.na(fall_enl_date) & !is.na(spring_enl_date)
+
+  # Primary entry date for main p_enl lookup
   if (nrow(enl_dets) > 0) {
     entry_date  <- as.Date(min(enl_dets$first_dt))
     entry_month <- month(entry_date)
@@ -201,7 +206,9 @@ fish_entry_meta <- map_dfr(fish_df$TagCode, function(tc) {
     has_date    <- FALSE
   }
   tibble(TagCode = tc, entry_date = entry_date, entry_month = entry_month,
-         ReturnYear = fm$ReturnYear, has_date = has_date, p_enl_fallback = fm$p_enl)
+         ReturnYear = fm$ReturnYear, has_date = has_date, p_enl_fallback = fm$p_enl,
+         fall_enl_date = fall_enl_date, spring_enl_date = spring_enl_date,
+         has_compound = has_compound)
 })
 
 # Build batch newdata for all fish that have a flow-matched date
@@ -226,16 +233,81 @@ if (nrow(unique_dates) > 0) {
   unique_dates$p_enl_pred <- numeric(0)
 }
 
+# ---- Compound detection: fish with fall AND spring ENL crossings ----
+compound_fish <- fish_entry_meta %>% filter(has_compound)
+
+if (nrow(compound_fish) > 0) {
+  cat(sprintf("  %d fish with compound (fall+spring) ENL crossings\n", nrow(compound_fish)))
+
+  unique_fall_c <- compound_fish %>%
+    select(fall_enl_date, ReturnYear) %>% distinct() %>%
+    left_join(flow_enl %>% mutate(date = as.Date(date)),
+              by = c("fall_enl_date" = "date")) %>%
+    filter(!is.na(discharge)) %>%
+    mutate(lq_s = (log(discharge) - enl_logq_mean) / enl_logq_sd,
+           yr_c = ReturnYear - enl_base_year)
+
+  unique_spring_c <- compound_fish %>%
+    select(spring_enl_date, ReturnYear) %>% distinct() %>%
+    left_join(flow_enl %>% mutate(date = as.Date(date)),
+              by = c("spring_enl_date" = "date")) %>%
+    filter(!is.na(discharge)) %>%
+    mutate(lq_s = (log(discharge) - enl_logq_mean) / enl_logq_sd,
+           yr_c = ReturnYear - enl_base_year)
+
+  if (nrow(unique_fall_c) > 0) {
+    nd_fall_c <- data.frame(log_q_s = unique_fall_c$lq_s, log_q2_s = unique_fall_c$lq_s^2,
+                            year = unique_fall_c$yr_c)
+    pred_fall_c <- posterior_epred(fit_enl, newdata = nd_fall_c,
+                                   allow_new_levels = TRUE, sample_new_levels = "gaussian")
+    unique_fall_c$p_enl_fall <- colMeans(pred_fall_c)
+    rm(pred_fall_c, nd_fall_c); gc()
+  } else {
+    unique_fall_c$p_enl_fall <- numeric(0)
+  }
+
+  if (nrow(unique_spring_c) > 0) {
+    nd_spring_c <- data.frame(log_q_s = unique_spring_c$lq_s, log_q2_s = unique_spring_c$lq_s^2,
+                              year = unique_spring_c$yr_c)
+    pred_spring_c <- posterior_epred(fit_enl, newdata = nd_spring_c,
+                                     allow_new_levels = TRUE, sample_new_levels = "gaussian")
+    unique_spring_c$p_enl_spring <- colMeans(pred_spring_c)
+    rm(pred_spring_c, nd_spring_c); gc()
+  } else {
+    unique_spring_c$p_enl_spring <- numeric(0)
+  }
+
+  compound_lookup <- compound_fish %>%
+    select(TagCode, fall_enl_date, spring_enl_date, ReturnYear) %>%
+    left_join(unique_fall_c   %>% select(fall_enl_date,   ReturnYear, p_enl_fall),
+              by = c("fall_enl_date", "ReturnYear")) %>%
+    left_join(unique_spring_c %>% select(spring_enl_date, ReturnYear, p_enl_spring),
+              by = c("spring_enl_date", "ReturnYear")) %>%
+    mutate(
+      p_fall_eff   = if_else(!is.na(p_enl_fall),   p_enl_fall,
+                             map_dbl(ReturnYear, ~get_seasonal_p_enl(.x, "fall"))),
+      p_spring_eff = if_else(!is.na(p_enl_spring), p_enl_spring,
+                             map_dbl(ReturnYear, ~get_seasonal_p_enl(.x, "spring"))),
+      p_compound   = 1 - (1 - p_fall_eff) * (1 - p_spring_eff)
+    ) %>%
+    select(TagCode, p_compound)
+} else {
+  cat("  No compound (fall+spring) ENL crossings found\n")
+  compound_lookup <- tibble(TagCode = character(), p_compound = numeric())
+}
+
 entry_corrections <- fish_entry_meta %>%
   left_join(unique_dates %>% select(entry_date, ReturnYear, p_enl_pred),
             by = c("entry_date", "ReturnYear")) %>%
+  left_join(compound_lookup, by = "TagCode") %>%
   mutate(
     entry_seas = if_else(entry_month %in% 1:6, "spring", "fall"),
     p_enl_seasonal = map2_dbl(ReturnYear, entry_seas, get_seasonal_p_enl),
     p_enl_entry = case_when(
-      !is.na(p_enl_pred)   ~ p_enl_pred,
-      !is.na(p_enl_seasonal) ~ p_enl_seasonal,
-      TRUE                 ~ p_enl_fallback
+      has_compound & !is.na(p_compound) ~ p_compound,
+      !is.na(p_enl_pred)               ~ p_enl_pred,
+      !is.na(p_enl_seasonal)           ~ p_enl_seasonal,
+      TRUE                             ~ p_enl_fallback
     ),
     spring_entry = as.integer(entry_month %in% 1:6)
   ) %>%

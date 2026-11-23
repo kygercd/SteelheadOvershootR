@@ -1,0 +1,103 @@
+Loading required package: Rcpp
+Loading 'brms' package (version 2.23.0). Useful instructions
+can be found by typing help('brms'). A more detailed introduction
+to the package is available through vignette('brms_overview').
+
+Attaching package: ‘brms’
+
+The following object is masked from ‘package:stats’:
+
+    ar
+
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.2.0     ✔ readr     2.1.5
+✔ forcats   1.0.1     ✔ stringr   1.5.2
+✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+✔ purrr     1.1.0     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+This is posterior version 1.6.1
+
+Attaching package: ‘posterior’
+
+The following objects are masked from ‘package:stats’:
+
+    mad, sd, var
+
+The following objects are masked from ‘package:base’:
+
+    %in%, match
+
+======================================================================
+SENSITIVITY ANALYSIS: EXCLUDING 2022-2024 (SPARSE n=1 YEARS)
+======================================================================
+
+Full dataset: 1321 fish, 20 years
+Excluding 2022-2024: 1318 fish, 17 years
+Removed: 3 fish (all ReturnedDownstream=1)
+
+Fitting (excl. 2022-2024): FallSpillHours...
+  beta_spill = -0.273 [-0.518, -0.043]; beta_harvest = -2.181 [-2.589, -1.772]
+
+Fitting (excl. 2022-2024): FallSpillDays...
+  beta_spill = -0.163 [-0.418, 0.080]; beta_harvest = -2.297 [-2.719, -1.886]
+
+Fitting (excl. 2022-2024): FallTotalSpill...
+  beta_spill = 0.006 [-0.369, 0.381]; beta_harvest = -2.264 [-2.679, -1.852]
+
+Fitting (excl. 2022-2024): SpringSpillHours...
+  beta_spill = 0.094 [-0.173, 0.354]; beta_harvest = -2.235 [-2.657, -1.807]
+
+Fitting (excl. 2022-2024): SpringSpillDays...
+  beta_spill = 0.088 [-0.215, 0.380]; beta_harvest = -2.241 [-2.659, -1.815]
+
+Fitting (excl. 2022-2024): SpringTotalSpill...
+  beta_spill = 0.034 [-0.219, 0.277]; beta_harvest = -2.254 [-2.686, -1.823]
+
+Saved: sensitivity_exclude_sparse_years_results.csv
+
+======================================================================
+COMPARISON: FULL DATA (n=1321, 20 yrs) vs EXCLUDING 2022-2024 (n=1318, 17 yrs)
+======================================================================
+# A tibble: 6 × 13
+  Metric           Beta_Spill_Mean_full Spill_Lower_full Spill_Upper_full
+  <chr>                           <dbl>            <dbl>            <dbl>
+1 FallSpillHours                -0.305            -0.538          -0.0667
+2 FallSpillDays                 -0.164            -0.407           0.0867
+3 FallTotalSpill                -0.0255           -0.389           0.334 
+4 SpringSpillHours               0.0887           -0.163           0.352 
+5 SpringSpillDays                0.0934           -0.199           0.383 
+6 SpringTotalSpill               0.0306           -0.222           0.276 
+  Beta_Harvest_Mean_full Harvest_Lower_full Harvest_Upper_full
+                   <dbl>              <dbl>              <dbl>
+1                  -2.18              -2.58              -1.77
+2                  -2.33              -2.74              -1.91
+3                  -2.29              -2.71              -1.88
+4                  -2.26              -2.68              -1.86
+5                  -2.27              -2.68              -1.85
+6                  -2.28              -2.72              -1.87
+  Beta_Spill_Mean_excl Spill_Lower_excl Spill_Upper_excl Beta_Harvest_Mean_excl
+                 <dbl>            <dbl>            <dbl>                  <dbl>
+1             -0.273             -0.518          -0.0429                  -2.18
+2             -0.163             -0.418           0.0798                  -2.30
+3              0.00631           -0.369           0.381                   -2.26
+4              0.0938            -0.173           0.354                   -2.23
+5              0.0885            -0.215           0.380                   -2.24
+6              0.0345            -0.219           0.277                   -2.25
+  Harvest_Lower_excl Harvest_Upper_excl
+               <dbl>              <dbl>
+1              -2.59              -1.77
+2              -2.72              -1.89
+3              -2.68              -1.85
+4              -2.66              -1.81
+5              -2.66              -1.81
+6              -2.69              -1.82
+
+Saved: sensitivity_exclude_sparse_years_comparison.csv
+
+======================================================================
+DONE
+======================================================================

@@ -6,10 +6,20 @@
 # Does the Wells Dam interaction effect on Entiat return probability differ
 # between fall (Jul-Dec) and spring (Jan-May) returning fish?
 #
-# Raw rates:
-#   Group A Fall:   74.0% (n=204)   Group A Spring: 68.6% (n=35)
-#   Group B Fall:   57.7% (n=123)   Group B Spring: 64.7% (n=17)
-#   Fall gap: -16.3 pp              Spring gap:  -3.9 pp
+# Season classification is based on ACTUAL Entiat entry season — the calendar
+# month of the fish's first ENL or upstream Entiat detection after the fall
+# RRF anchor — NOT run timing (ReturnSeason in fish_model, which is always
+# "Fall" for this study's summer steelhead).
+#
+#   Spring returner: first Entiat detection in Jan–Jun (months 1–6)
+#   Fall returner:   first Entiat detection in Jul–Dec (months 7–12)
+#   Never detected:  no Entiat detection → classified as fall (default)
+#
+# For Group B, a "fall returner" is a fish detected at Wells in fall that
+# also reached the Entiat the same fall. A "spring returner" is a fish
+# detected at Wells in fall that did not arrive in the Entiat until spring
+# (i.e., it overwintered between Wells Dam and the Entiat mouth). The
+# majority of Group B fish are spring returners by this definition.
 #
 # MODELS
 # ------
@@ -22,9 +32,6 @@
 #                              + harvest_open + (1|ReturnYear)
 #   - Compound Bernoulli likelihood (detection-corrected)
 #   - Tests if the seasonal interaction survives detection correction
-#
-# NOTE: Spring n is small (35 + 17 = 52 fish). Posterior for spring Wells
-# effect will be wide. The interaction term is exploratory.
 ###############################################################################
 
 library(brms)
@@ -46,11 +53,18 @@ cat("======================================================================\n\n"
 # LOAD DATA
 # =============================================================================
 
-fish <- read_csv("entiat_analysis_with_detection_eff.csv", show_col_types = FALSE) %>%
+# Load fish_clean from the cleaned strict analysis, which has spring_entry
+# (actual Entiat entry season: 1 = first detection in months 1-6, 0 = months
+# 7-12 or never detected). This is the correct season variable — ReturnSeason
+# in the raw CSV is run timing (always "Fall" for summer steelhead) and must
+# not be used here.
+load("entiat_cleaned_strict_models.RData")   # fish_clean, bad_tags, season_means
+
+fish <- fish_clean %>%
   mutate(
-    p_enl_safe       = ifelse(is.na(p_enl), 1.0, p_enl),
+    p_enl_safe       = pmax(0.01, pmin(0.99, p_enl_corrected)),
     ReturnYearFactor = factor(ReturnYear),
-    spring_return    = as.integer(ReturnSeason == "Spring"),
+    spring_return    = spring_entry,      # actual Entiat entry season
     wells_interaction = as.integer(group == "B")
   )
 
@@ -502,10 +516,10 @@ cat(sprintf("  Wells effect SPRING: beta=%.3f, OR=%.2f, P(<0)=%.3f\n",
 cat(sprintf("  Interaction (spring-fall diff): beta=%.3f, P(>0)=%.3f\n",
             mean(b_interaction_f), mean(b_interaction_f>0)))
 
-cat(sprintf("\nCAUTION: Spring n is small (Group A: %d, Group B: %d).\n",
+cat(sprintf("\nNOTE: Spring n (Group A: %d, Group B: %d).\n",
             desc$n[desc$group=="A" & grepl("Spring",desc$Season)],
             desc$n[desc$group=="B" & grepl("Spring",desc$Season)]))
-cat("  The interaction posterior will be wide. Treat as exploratory.\n")
+cat("  Season = actual Entiat entry season (first ENL/upstream detection month).\n")
 
 cat("\n======================================================================\n")
 cat("ANALYSIS COMPLETE\n")

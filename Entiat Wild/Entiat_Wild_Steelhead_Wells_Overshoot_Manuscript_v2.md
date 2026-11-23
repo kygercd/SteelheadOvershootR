@@ -12,7 +12,7 @@ April 2026
 
 # Abstract
 
-Wild summer steelhead (*Oncorhynchus mykiss*) returning to the Entiat River have been observed overshooting their natal tributary and ascending the fish ladders at Wells Dam (river kilometer 830). Whether this overshoot behavior reduces subsequent probability of return to the Entiat River subbasin has not been formally evaluated. Using PIT-tag detection data from 404 wild Entiat-origin steelhead detected above Rocky Reach Dam across return years 2006--2025, we employed Bayesian hierarchical logistic regression to test whether interaction with Wells Dam, harvest status (open vs. closed years), spring return timing, and spill conditions at Wells Dam predict whether a fish is subsequently detected in the Entiat River subbasin. Fish were classified into Group A (no Wells Dam detection post-adult Rocky Reach passage; n = 223) and Group B (Wells Dam interaction, excluding confirmed strays; n = 181). All Group B fish were fall returners. Group A fish were detected in the Entiat River 89.7% of the time compared to 68.0% for Group B---a 21.7 percentage-point gap. The Bayesian hierarchical model estimated an odds ratio of 0.260 (95% CI: 0.153--0.434) for the Wells Dam interaction, with posterior probability of a negative effect of 1.000. A compound-detection-likelihood model incorporating per-fish ENL detection efficiency yielded a stronger estimate (OR = 0.160; 95% CI: 0.065--0.344; P(β < 0) = 1.000). A sensitivity analysis using a strict spawning outcome---requiring detection at ENL and at least one upstream Entiat site within 18 months---yielded Group A = 60.1% and Group B = 47.5%, with the detection-corrected model estimating OR = 0.485 (95% CI: 0.286--0.813; P(β < 0) = 0.997). The true effect on spawning success likely falls between these bounds. Among Group B fish (Model 2; n = 181), fall spill hours showed a suggestive positive association with Entiat return probability (OR = 1.33; 95% CI: 0.93--1.97; P(β > 0) = 0.938), though the credible interval spans zero. Spring spill showed a similar trend (OR = 1.24; P(β > 0) = 0.843). These findings indicate that wild Entiat steelhead that overshoot to Wells Dam have roughly one-quarter to one-half the odds of being detected returning to the Entiat River, an effect consistent across seasons and dam operating conditions, with direct implications for ESA recovery planning.
+Wild summer steelhead (*Oncorhynchus mykiss*) returning to the Entiat River have been observed overshooting their natal tributary and ascending the fish ladders at Wells Dam (river kilometer 830). Whether this overshoot behavior reduces subsequent probability of return to the Entiat River subbasin has not been formally evaluated. Using PIT-tag detection data from 404 wild Entiat-origin steelhead detected above Rocky Reach Dam across return years 2006--2025, we employed Bayesian hierarchical logistic regression to test whether interaction with Wells Dam, harvest status (open vs. closed years), and spill conditions at Wells Dam predict whether a fish is subsequently detected in the Entiat River subbasin. Fish were classified into Group A (no Wells Dam detection post-adult Rocky Reach passage; n = 223) and Group B (Wells Dam interaction, excluding confirmed strays; n = 181). Group A fish were detected anywhere in the Entiat River subbasin 89.7% of the time compared to 68.0% for Group B---a 21.7 percentage-point gap. The Bayesian hierarchical model estimated an odds ratio of 0.260 (95% CI: 0.153--0.434) for the Wells Dam interaction, with posterior probability of a negative effect of 1.000. A compound-detection-likelihood model incorporating per-fish ENL detection efficiency yielded a stronger estimate (OR = 0.131; 95% CI: 0.038--0.395; P(β < 0) = 0.999). We evaluated four successive outcome criteria to assess robustness: (C2) confirmed upstream passage within 18 months (Group A = 75.3%, Group B = 59.7%; standard OR = 0.449, detection-corrected OR = 0.326); (C3) actual-entry-season reclassification crediting spring-entry Group A fish for spring ENL detections and Group B fish for any Entiat entry (Group A = 82.5%, Group B = 68.0%; standard OR = 0.435, detection-corrected OR = 0.290); and (C4) an upper sensitivity crediting five additional Group A fall-entry fish with upstream-directed ENL antenna patterns (standard OR = 0.578, detection-corrected OR = 0.462). Across all criteria and model types, the Wells Dam effect was negative with P(β < 0) ≥ 0.994, and 95% credible intervals excluded zero under all but the most conservative specification. Annual harvest status showed no credible effect. Fall spill hours at Wells Dam showed a suggestive positive association with Group B Entiat return probability (OR = 1.33; 95% CI: 0.93--1.97; P(β > 0) = 0.938), though the credible interval spans zero. These findings indicate that wild Entiat steelhead that overshoot to Wells Dam have roughly one-quarter to one-half the odds of returning to the Entiat River, an effect consistent across all outcome definitions and dam operating conditions, with direct implications for ESA recovery planning.
 
 *Keywords: steelhead, overshoot, natal homing, PIT tag, Bayesian hierarchical model, Wells Dam, Entiat River, Columbia River*
 
@@ -30,7 +30,7 @@ What proportion of overshooting fish subsequently return to natal streams is unc
 
 ## Detection Efficiency Considerations
 
-Interpreting PIT-tag-based detection rates requires careful attention to antenna detection efficiency, which varies by season and discharge. The lower Entiat River antenna (ENL) has lower detection probability during high-discharge periods. We addressed this directly by: (1) characterizing the seasonal distribution of returns for each group; (2) computing within-season detection rates for Group A and Group B; (3) fitting a robustness model that includes spring return timing as an explicit covariate; and (4) fitting a compound Bernoulli likelihood model, Y~i~ \~ Bernoulli(θ~i~ × p~ENL,i~), in which per-fish detection efficiency p~ENL,i~ was estimated from a Bayesian hierarchical flow model of ENL detection data.
+Interpreting PIT-tag-based detection rates requires careful attention to antenna detection efficiency, which varies by season and discharge. The lower Entiat River antenna (ENL) has lower detection probability during high-discharge periods. We addressed this directly by: (1) characterizing the seasonal distribution of returns for each group; (2) computing within-season detection rates for Group A and Group B; (3) fitting a robustness model that includes spring return timing as an explicit covariate; and (4) fitting a compound Bernoulli likelihood model, Y~i~ \~ Bernoulli(θ~i~ × p~ENL,i~), in which per-fish detection efficiency p~ENL,i~ was estimated from a Bayesian hierarchical flow model of ENL detection data. For fish detected at ENL in both fall and spring---indicating two separate inriver entry attempts---a compound detection probability was applied: p~detect~ = 1 − (1 − p~fall~)(1 − p~spring~), which appropriately reflects the reduced chance of missing a fish on either of two detection opportunities.
 
 ## Study Objectives
 
@@ -40,7 +40,6 @@ This study tested the following primary hypothesis:
 
 Three secondary questions were also addressed:
 
-- Does spring return timing (and associated lower ENL detection efficiency) explain the group difference in Entiat detection rates?
 - Does annual harvest status (open vs. closed) influence Entiat return probability?
 - Among Wells-interacting fish, do spill conditions at Wells Dam during the fall arrival window (August--November) or spring holding window (January--March) predict Entiat return probability?
 
@@ -88,18 +87,31 @@ Fish were assigned to one of three categories based on post-anchor detection his
 
 ## Outcome Definitions
 
-### Original outcome: EntiatDetected
+We evaluated four successive outcome criteria of increasing biological specificity:
 
-EntiatDetected = 1 if the fish had any post-anchor detection at an Entiat River subbasin site, 0 otherwise. No time restriction is imposed on the detection window.
+### Criterion 1 (C1) — Broad Detection
 
-### Strict outcome: EntiatSpawned
+EntiatDetected = 1 if the fish had any post-anchor detection at any Entiat River subbasin site, 0 otherwise. No time restriction is imposed on the detection window. This is the most inclusive measure of Entiat return and forms the primary outcome for between-group comparison.
 
-A more conservative outcome was defined to require evidence of reaching documented spawning habitat within 18 months of the RRF anchor:
+### Criterion 2 (C2) — Original Strict (Confirmed Upstream Passage)
 
-- **Fall returners:** Detection at ENL (Lower Entiat River, rkm 1--2) AND at least one upstream Entiat site, both within 18 months of anchor
-- **Spring returners:** Detection at ENL alone within 18 months of anchor (spring fish may spawn in the lower Entiat reach below ENM)
+A fish is scored as successful (EntiatSpawned = 1) if it was detected at any upstream Entiat River site (ENM or higher; i.e., sites other than ENL) within 18 months of the RRF anchor. ENL-alone detections do not satisfy this criterion: ENL is at the river mouth with no spawning habitat below it, and brief or exploratory ENL detections without subsequent upstream movement are not counted as evidence of successful spawning. Confirmed upstream passage is treated as sufficient regardless of whether ENL detected the fish on its approach, as passage through the river mouth is implied by any upstream detection.
 
-ENL is at the mouth of the Entiat River with no spawning habitat below it. Fall fish detected at ENL but never at upstream sites likely represent brief or incomplete entry events and are scored as EntiatSpawned = 0.
+### Criterion 3 (C3) — Reclassified by Actual Entry Season
+
+Each fish is reclassified based on its actual Entiat River entry season---defined by the calendar month of any post-anchor detection at ENL or any upstream Entiat site---rather than the RRF anchor season (which is always fall by design). A fish with any spring detection (January--June) at ENL or upstream is classified as a spring migrant.
+
+Outcome scoring under C3:
+
+- **Spring-entry Group A fish:** detection at ENL in spring (months 1--6) OR at any upstream Entiat site within 18 months = success. Fish with exclusively fall ENL detections and no upstream confirmation or subsequent spring return = failure.
+- **Fall-entry Group A fish:** confirmed upstream Entiat passage within 18 months = success (same as C2).
+- **Group B fish (spring or fall entry):** any Entiat detection within 18 months = success. These fish navigated back past Wells Dam to reach the Entiat subbasin, which already demonstrates natal homing success regardless of how far upstream they traveled.
+
+For spring-entry fish, per-fish ENL detection probability is computed at the actual spring entry date's flow rather than the fall anchor date's flow, since spring flows at ENL are typically higher and detection efficiency lower.
+
+### Criterion 4 (C4) — ENL Directionality Sensitivity
+
+Builds on C3 by additionally crediting five Group A fall-entry fish that have ENL-only detections (no upstream Entiat site in window) but whose ENL antenna records show upstream-directed movement: either a lower-to-upper antenna detection sequence (entering pattern) or multiple detections exclusively on upstream antennas. Single-observation upper-antenna detections are not credited due to ambiguity. All other fish are unchanged from C3. C4 tests whether the C3 result is conservative with respect to the unmonitored lower Entiat reach (approximately rkm 1--10, between ENL and ENM).
 
 ## Data Quality
 
@@ -115,28 +127,27 @@ Release-date checks (age at anchor = days from tagging to RRF anchor / 365.25) i
 
 **harvest_open:** Binary year-level indicator; 1 = open harvest year (2006--2015, 2024--2025), 0 = closed harvest year (2016--2023).
 
-**spring_return:** Binary; 1 = anchor date in January--May, 0 = July--December.
-
 **Spill metrics (Model 2 only):** Fall and spring spill hours at Wells Dam standardized to mean = 0, SD = 1.
 
 ## Statistical Analysis
 
 We fitted Bayesian hierarchical logistic regression models using the brms package (Bürkner 2017, 2018) in R with the Stan backend. All models included a random intercept for return year enabling partial pooling across the 20 return years in the dataset. MCMC settings: 4 chains × 4,500 iterations (1,500 warmup) = 12,000 post-warmup draws; adapt_delta = 0.95. Weakly informative priors were used: Normal(0, 1.5) on all fixed effects; Exponential(1) on year SD (Gelman et al. 2008). Convergence was assessed via the Gelman--Rubin diagnostic (R̂ < 1.01) and bulk effective sample size (ESS > 1,000).
 
-The detection-corrected models used a custom compound Bernoulli likelihood family: P(Y~i~ = 1) = θ~i~ × p~ENL,i~, where θ~i~ = inv_logit(η~i~) is the true return probability and p~ENL,i~ is the per-fish ENL detection efficiency. Per-fish p~ENL,i~ was estimated from a Bayesian hierarchical model of ENL detection data using quadratic log-discharge and a year random effect. Nine fish with missing flow data were excluded from detection-corrected model fits (n = 395 for strict detection-corrected models).
+The detection-corrected models used a custom compound Bernoulli likelihood family implemented in Stan: P(Y~i~ = 1) = θ~i~ × p~ENL,i~, where θ~i~ = inv_logit(η~i~) is the true return probability and p~ENL,i~ is the per-fish ENL detection efficiency. Per-fish p~ENL,i~ was estimated from a Bayesian hierarchical model of ENL detection data using quadratic log-discharge and a year random effect. Detection probabilities were computed at the fish's actual ENL entry date; for fish with no ENL detection, the year-season mean was used as a proxy. For fish detected at ENL in both fall and spring, a compound detection probability p~detect~ = 1 − (1 − p~fall~)(1 − p~spring~) was applied. Two fish with missing flow data were excluded from detection-corrected model fits (n = 402 for detection-corrected models).
 
 Effect sizes are reported as odds ratios (OR = exp(β)) with 95% posterior credible intervals and posterior probability P(β < 0).
 
-**Model specifications:**
+**Primary model specifications:**
 
 1. **Model 1** (all fish, n = 404): EntiatDetected \~ wells_interaction + harvest_open + (1 | ReturnYearFactor)
-2. **Model 1b** (all fish): EntiatDetected \~ wells_interaction + harvest_open + spring_return + (1 | ReturnYearFactor)
-3. **Model 1c** (detection-corrected): Y~i~ | vreal(p~ENL,i~) \~ wells_interaction + harvest_open + (1 | ReturnYearFactor), compound Bernoulli likelihood
-4. **Model 1e** (season interaction): EntiatDetected \~ wells_interaction × spring_return + harvest_open + (1 | ReturnYearFactor)
-5. **Model 2** (Group B only, n = 160): EntiatDetected \~ SpringSpillHours_z + FallSpillHours_z + harvest_open + (1 | ReturnYearFactor)
-6. **Model S1** (strict outcome): EntiatSpawned \~ wells_interaction + harvest_open + (1 | ReturnYearFactor)
-7. **Model S2** (strict, detection-corrected, n = 395): compound Bernoulli likelihood on EntiatSpawned
-8. **Model S3** (strict, season interaction): EntiatSpawned \~ wells_interaction × spring_return + harvest_open + (1 | ReturnYearFactor)
+2. **Model 1c** (detection-corrected, n = 404): Y~i~ | vreal(p~ENL,i~) \~ wells_interaction + harvest_open + (1 | ReturnYearFactor), compound Bernoulli likelihood
+3. **Model 2** (Group B only, n = 181): EntiatDetected \~ SpringSpillHours_z + FallSpillHours_z + harvest_open + (1 | ReturnYearFactor)
+
+**Strict and sensitivity outcome models (standard and detection-corrected for each):**
+
+6. **Models S1/S2** (C2 strict, n = 404/402): EntiatSpawned (upstream confirmed) \~ wells_interaction + harvest_open + (1 | ReturnYearFactor)
+7. **Models S1r/S2r** (C3 reclassified, n = 404/402): EntiatSpawned_r \~ wells_interaction + harvest_open + (1 | ReturnYearFactor)
+8. **Models S1s/S2s** (C4 ENL sensitivity, n = 404/402): EntiatSpawned_s \~ wells_interaction + harvest_open + (1 | ReturnYearFactor)
 
 # Results
 
@@ -174,15 +185,18 @@ Overall, 323 of 404 fish (79.9%) were detected in the Entiat River. Group A dete
 
 ## Seasonal Distribution of Returns
 
-Group A had nine spring returners (4.0%; 9/223) and 214 fall returners. All 181 Group B fish were fall returners. Because no Group B spring fish are present in the dataset, differential spring ENL detection efficiency cannot contribute to the observed group gap. Within-season analysis of fall returners shows the group gap clearly: Group A fall detection rate was 89.7% (192/214) vs. Group B fall detection rate of 68.0% (123/181), a 21.7-point gap in the season where detection efficiency is highest (Table 2).
+All fish in this study had fall Rocky Reach anchor dates by design (Rocky Reach passage in July--December). However, the majority of both groups overwintered in the Columbia River mainstem or lower tributaries and entered the Entiat River in spring. Of 223 Group A fish, 113 (50.7%) had their first post-anchor Entiat detection in spring (January--June), 87 (39.0%) entered in fall, and 23 (10.3%) were never detected at Entiat River arrays. Among 181 Group B fish, 104 (57.5%) first entered the Entiat in spring, 18 (9.9%) in fall, and 59 (32.6%) were never detected at main Entiat arrays (Table 2). This overwinter-and-enter pattern is expected for Columbia Basin summer steelhead.
 
-| Return Season | Grp A (n) | Grp A Det. % | Grp B (n) | Grp B Det. % |
-|---------------|-----------|--------------|-----------|--------------|
-| Fall (Jul--Dec) | 214 | 89.7% | 181 | 68.0% |
-| Spring (Jan--May) | 9 | 88.9% | 0 | — |
+By definition, all fish with a spring or fall Entiat entry recorded were detected at C1 (any Entiat detection = 1); the 21.7-percentage-point group difference in C1 detection (89.7% vs. 68.0%) is therefore driven entirely by the higher non-return rate among Group B fish (59/181 = 32.6%) relative to Group A (23/223 = 10.3%). Among Group B fish that did return, 104 of 122 (85.2%) entered the Entiat in spring --- indicating that the majority of overshoot fish successfully navigate back from Wells Dam and enter the Entiat, but only after overwintering. The Wells effect on C1 detection thus operates primarily through a failure-to-return mechanism rather than through differential within-season detection efficiency.
+
+| Actual Entiat Entry Season | Grp A (n) | Grp A Det. % | Grp B (n) | Grp B Det. % |
+|---------------------------|-----------|--------------|-----------|--------------|
+| Spring (Jan--Jun) | 113 | 100.0% | 104 | 100.0% |
+| Fall (Jul--Dec) | 87 | 100.0% | 18 | 100.0% |
+| Not detected at Entiat arrays | 23 | 0.0% | 59 | 0.0% |
 | **All fish** | **223** | **89.7%** | **181** | **68.0%** |
 
-*Table 2. Entiat River detection rates by group and return season. All Group B fish are fall returners, ruling out spring detection efficiency as a confound.*
+*Table 2. Entiat River detection rates by group and actual Entiat entry season (month of first post-anchor ENL or upstream detection). All fish with a recorded Entiat entry were detected (C1 = 1); the group gap is driven by the higher non-return rate in Group B (32.6% vs. 10.3%).*
 
 ![Figure 1. Data overview.](fig1_data_overview.png)
 
@@ -210,31 +224,13 @@ Year-level random effect standard deviation was σ ≈ 0.55, indicating substant
 
 *Figure 2. Model 1 results. (A) Posterior distributions for the Wells interaction (blue) and harvest open (orange) coefficients. The Wells posterior is entirely below zero. (B) Odds ratio estimates with 95% credible intervals on a log scale. Dashed line at OR = 1.0 represents the null hypothesis.*
 
-## Model 1b: Robustness to Spring Return Season
-
-Including spring return season as an additional covariate had negligible effect on the Wells interaction estimate:
-
-- Model 1b β_wells = −1.354 (95% CI: −1.886, −0.829); P(β < 0) = 1.000
-
-Because no Group B fish are spring returners, this covariate provides no additional information about Group B detection probability and cannot alter the group comparison. The Wells interaction estimate is unchanged.
-
-### Detection-Corrected Models (Models 1c and 1e)
+### Detection-Corrected Model (Model 1c)
 
 The compound Bernoulli likelihood model correcting for per-fish ENL detection efficiency yielded:
 
-- **Model 1c:** β_wells = −1.836 (95% CI: −2.737, −1.067); OR = 0.160; P(β < 0) = 1.000
+- **Model 1c:** β_wells = −2.035 (95% CI: −3.259, −0.929); OR = 0.131; P(β < 0) = 0.999
 
 ENL detection efficiencies ranged from 0.25 to 0.99 (mean = 0.851). Mean detection efficiency was nearly identical between groups (Group A: 0.853; Group B: 0.849), confirming that differential per-group detection probability is not a source of bias. Correcting for detection imperfection strengthens the inferred effect, as expected when both groups have similar efficiency: undetected fish in the high-return Group A are relatively more likely to be missed returners, slightly widening the inferred gap.
-
-**Model 1e (season interaction):**
-
-| Season | β | OR | 95% CI | P(β < 0) |
-|--------|---|----|--------|----------|
-| Fall | −1.402 | 0.246 | [−1.952, −0.885] | 1.000 |
-| Spring | −1.407 | 0.245 | [−3.448, +0.651] | 0.907 |
-| Interaction (spring − fall) | −0.006 | — | [−1.979, +1.975] | — |
-
-The season interaction is negligible. The spring Wells effect is imprecisely estimated because all Group B fish are fall returners; the spring comparison is based entirely on Group A variation.
 
 ## Year Random Effects
 
@@ -242,7 +238,7 @@ Year-level random effects revealed substantial inter-annual variation in baselin
 
 ![Figure 3. Model robustness.](fig3_robustness.png)
 
-*Figure 3. Robustness of the Wells interaction estimate. (A) Posterior distributions for the Wells effect across Model 1 (standard), Model 1b (+ spring season covariate), and Model 1c (detection-corrected). All three are consistent and entirely below zero. (B) Spring return season coefficient from Model 1b, centered near zero.*
+*Figure 3. Robustness of the Wells interaction estimate. Posterior distributions for the Wells effect under the standard hierarchical logistic model (M1) and the compound-detection-likelihood model (M1c). Both posteriors are consistent and entirely below zero, confirming that detection imperfection does not explain the group difference.*
 
 ![Figure 4. Year random effects.](fig4_year_effects.png)
 
@@ -260,42 +256,68 @@ Both spill metrics show positive point estimates — that is, years with more sp
 
 [**Figure 5.** Model 2 results (Group B fish, n = 181). Left: Posterior distributions for fall spill hours (orange), spring spill hours (blue), and harvest open (green). Right: Annual fall spill hours vs. Group B Entiat detection rate by year, colored by harvest status.]
 
-## Strict Spawning Outcome
+## Strict and Sensitivity Outcome Analyses (Criteria C2--C4)
 
-The strict outcome (EntiatSpawned) required detection at ENL plus at least one upstream Entiat site within 18 months of anchor for fall fish, or ENL alone within 18 months for spring fish. Strict outcome rates were Group A = 60.1% (134/223) and Group B = 47.5% (86/181).
+Return rates and model results across all four outcome criteria are summarized in Table 3 (below). The Wells Dam effect is negative and credible under all specifications.
 
-**Model S1 (standard, n = 404):** β_wells = −0.593 (95% CI: −1.016, −0.182); OR = 0.553; P(β < 0) = 0.998
+### C2 — Confirmed Upstream Passage
 
-**Model S2 (detection-corrected, n = 395):** β_wells = −0.723 (95% CI: −1.251, −0.212); OR = 0.485; P(β < 0) = 0.997
+Requiring detection at any upstream Entiat site (ENM or higher) within 18 months of anchor yielded:
 
-**Model S3 (season interaction):**
+- Group A: 168/223 = 75.3%; Group B: 108/181 = 59.7%; gap = 15.6 pp
+- **S1 (standard):** β = −0.801 (95% CI: −1.246, −0.352); OR = 0.449; P(β < 0) = 1.000
+- **S2 (detection-corrected):** β = −1.120 (95% CI: −1.767, −0.491); OR = 0.326; P(β < 0) = 1.000
 
-| Season | β | OR | 95% CI | P(β < 0) |
-|--------|---|----|--------|----------|
-| Fall | −0.599 | 0.550 | [−1.015, −0.187] | 0.997 |
-| Spring | −0.601 | 0.548 | [−3.518, +2.316] | 0.661 |
-| Interaction | −0.002 | — | [−2.885, +2.852] | — |
+The Wells effect is highly credible under both specifications. Detection correction strengthens the estimate, as expected: spring-entry fish that crossed ENL during high-flow conditions have lower p~ENL~ and are more likely to be missed returners, so correcting for detection shifts the inferred true return rate upward for both groups.
 
-No season interaction is detectable under the strict outcome. The spring estimate is unidentifiable because no Group B spring fish are present.
+### C3 — Reclassified by Actual Entry Season
+
+Reclassifying fish by actual Entiat entry season and applying season-appropriate criteria (spring ENL sufficient for spring-entry Group A fish; any Entiat detection sufficient for Group B fish) yielded:
+
+- Group A: 184/223 = 82.5%; Group B: 123/181 = 68.0%; gap = 14.5 pp
+- **S1r (standard):** β = −0.832 (95% CI: −1.305, −0.364); OR = 0.435; P(β < 0) = 1.000
+- **S2r (detection-corrected):** β = −1.238 (95% CI: −2.031, −0.515); OR = 0.290; P(β < 0) = 1.000
+
+Reclassification raises Group A from 75.3% (C2) to 82.5% by crediting spring-entry fish with spring ENL detections who lacked upstream confirmation. Group B also rises from 59.7% to 68.0% by crediting Group B fish with ENL-only detections, consistent with the rationale that navigating back past Wells Dam already constitutes homing success. The raw gap narrows slightly (14.5 pp vs. 15.6 pp), but model estimates remain large and highly credible; 95% credible intervals exclude zero under both specifications.
+
+### C4 — ENL Directionality Sensitivity
+
+Five Group A fall-entry fish with upstream-directed ENL antenna patterns (entering or multi-observation upper-antenna detections) were additionally credited:
+
+| Tag Code | Year | Antenna Pattern |
+|----------|------|-----------------|
+| 3D9.1C2C517ED3 | 2010 | Entering (Lower→Upper) |
+| 3D9.1C2C51DAD4 | 2010 | Entering (Lower→Upper) |
+| 3D9.1C2D774C1E | 2014 | Entering (Lower→Upper) |
+| 3D9.1C2D8D4137 | 2013 | Entering (Lower→Upper) |
+| 3D9.1C2DDAD709 | 2014 | Upper/Upstream only (multi-obs) |
+
+- Group A: 189/223 = 84.8%; Group B: 123/181 = 68.0%; gap = 16.8 pp
+- **S1s (standard):** β = −0.548 (95% CI: −0.976, −0.126); OR = 0.578; P(β < 0) = 0.994
+- **S2s (detection-corrected):** β = −0.772 (95% CI: −1.390, −0.183); OR = 0.462; P(β < 0) = 0.995
+
+Adding directional evidence for these five fish does not undermine the C3 conclusion. Both credible intervals exclude zero and P(β < 0) remains high. C4 thus represents a conservative upper bound on Group A return probability; the Wells effect is present regardless of whether fish in the unmonitored lower Entiat reach are credited.
 
 ## Summary of All Model Results
 
 | Model | Outcome | β (Wells) | OR | 95% CI | P(β < 0) |
 |-------|---------|-----------|-----|--------|----------|
-| M1 standard (n = 404) | ENL detected | −1.348 | 0.260 | [−1.881, −0.834] | 1.000 |
-| M1b + season (n = 404) | ENL detected | −1.354 | 0.258 | [−1.886, −0.829] | 1.000 |
-| M1c det-corrected (n = 404) | ENL detected | −1.836 | 0.160 | [−2.737, −1.067] | 1.000 |
-| M1e fall season | ENL detected | −1.402 | 0.246 | [−1.952, −0.885] | 1.000 |
-| M2 spring spill (n = 181) | ENL detected | +0.219 | 1.24 | [−0.199, +0.667] | 0.157 |
-| M2 fall spill (n = 181) | ENL detected | +0.285 | 1.33 | [−0.077, +0.677] | 0.062 |
-| S1 standard (n = 404) | Strict spawned | −0.593 | 0.553 | [−1.016, −0.182] | 0.998 |
-| S2 det-corrected (n = 395) | Strict spawned | −0.723 | 0.485 | [−1.251, −0.212] | 0.997 |
+| M1 standard (n = 404) | C1 broad detected | −1.348 | 0.26 | [−1.881, −0.834] | 1.000 |
+| M1c det-corrected (n = 404) | C1 broad detected | −2.035 | 0.13 | [−3.259, −0.929] | 0.999 |
+| M2 spring spill (n = 181) | C1 broad detected | +0.219 | 1.24 | [−0.199, +0.667] | 0.157 |
+| M2 fall spill (n = 181) | C1 broad detected | +0.285 | 1.33 | [−0.077, +0.677] | 0.062 |
+| S1 standard (n = 404) | C2 upstream confirmed | −0.801 | 0.45 | [−1.246, −0.352] | 1.000 |
+| S2 det-corrected (n = 402) | C2 upstream confirmed | −1.120 | 0.33 | [−1.767, −0.491] | 1.000 |
+| S1r standard (n = 404) | C3 reclassified | −0.832 | 0.44 | [−1.305, −0.364] | 1.000 |
+| S2r det-corrected (n = 402) | C3 reclassified | −1.238 | 0.29 | [−2.031, −0.515] | 1.000 |
+| S1s standard (n = 404) | C4 ENL sensitivity | −0.548 | 0.58 | [−0.976, −0.126] | 0.994 |
+| S2s det-corrected (n = 402) | C4 ENL sensitivity | −0.772 | 0.46 | [−1.390, −0.183] | 0.995 |
 
 *Table 3. Posterior summaries for all models. β = log-odds coefficient (posterior mean); CI = 95% posterior credible interval; OR = exp(β); P(β < 0) = posterior probability of a negative Wells effect. For Model 2 spill rows, P(β < 0) reflects the probability of a negative spill effect (i.e., 1 − P(β > 0)).*
 
 ![Figure 6. Outcome comparison.](fig6_outcome_comparison.png)
 
-*Figure 6. Wells Dam interaction odds ratio across outcome definitions. Points show posterior mean OR; horizontal bars show 95% credible intervals. The original ENL-detection outcome (top) captures probability of reaching the Entiat River mouth; the strict spawning outcome (bottom) captures probability of reaching documented spawning habitat. The true effect on reproductive success likely falls between these bounds.*
+*Figure 6. Wells Dam interaction odds ratio across outcome definitions. Points show posterior mean OR; horizontal bars show 95% credible intervals. The original broad detection outcome (top) captures probability of reaching the Entiat River subbasin; the strict and reclassified outcomes capture probability of confirmed upstream passage or spring ENL entry; the ENL sensitivity provides an upper bound crediting directionally confirmed entries into the unmonitored lower reach.*
 
 # Discussion
 
@@ -303,17 +325,21 @@ No season interaction is detectable under the strict outcome. The spring estimat
 
 The primary finding of this analysis is that wild Entiat steelhead detected at Wells Dam had approximately 74% lower odds of being subsequently detected in the Entiat River compared to fish that did not interact with Wells (OR = 0.260; P(β < 0) = 1.000). This effect is large, highly credible, and consistent with the raw detection rate gap of 21.7 percentage points (89.7% vs. 68.0%). The finding complements Murdoch et al. (2022), who estimated that roughly 40% of wild steelhead overshoots at Priest Rapids Dam fail to return downstream, and adds specificity by quantifying this reduction for wild Entiat fish at the uppermost fish-passage dam on the Columbia.
 
-The detection-corrected model (OR = 0.160) suggests the true effect on Entiat return probability may be even larger, as both groups have similar ENL detection efficiency (Group A: 0.853; Group B: 0.849) and the compound likelihood appropriately attributes a larger share of undetected Group A fish to missed returners given their higher baseline return rate. Across our dataset, the Wells interaction translates to an estimated ~40 fewer Entiat detections among the 181 Group B fish than would be expected if they had the same return rate as Group A.
+The detection-corrected model (OR = 0.131) suggests the true effect on Entiat return probability may be even larger, as both groups have similar ENL detection efficiency (Group A: 0.853; Group B: 0.849) and the compound likelihood appropriately attributes a larger share of undetected Group A fish to missed returners given their higher baseline return rate. Across our dataset, the Wells interaction translates to an estimated ~40 fewer Entiat detections among the 181 Group B fish than would be expected if they had the same return rate as Group A.
 
-## Strict Spawning Outcome Provides a Lower Bound
+## Robustness Across Multiple Outcome Criteria
 
-The strict spawning outcome (OR = 0.485--0.553) is attenuated relative to the original ENL-detection outcome (OR = 0.160--0.260). This difference reflects the stricter criteria: fall fish must be detected at ENL and at least one upstream site within 18 months, excluding fish that may have reached the river mouth but did not proceed to monitored spawning grounds. The unmonitored lower Entiat reach (rkm 1--~10, between ENL and ENM) could harbor spawners not captured by the strict criteria, particularly among Group A ENL-only fish. We interpret the original outcome as capturing "probability of reaching the Entiat River" and the strict outcome as capturing "probability of reaching documented spawning grounds," with the true effect on reproductive success likely falling between these bounds.
+The Wells Dam effect was negative and statistically credible (P(β < 0) ≥ 0.994; 95% CI excluding zero) across all four outcome criteria and both model specifications (Table 3). This cross-criteria consistency is a primary strength of the analysis.
 
-## Absence of Spring Group B Fish Rules Out Detection Efficiency Confounding
+The broad detection outcome (C1, OR = 0.131--0.260) captures probability of reaching the Entiat River subbasin. The strict upstream confirmation outcome (C2, OR = 0.326--0.449) requires evidence of movement into documented spawning habitat above ENL. The reclassified outcome (C3, OR = 0.290--0.435) applies biologically appropriate seasonal criteria: spring-entry fish that reach ENL during the spring spawning migration are credited without requiring further upstream confirmation, reflecting that the lower Entiat reach (rkm 1--10 below ENM) constitutes productive spawning habitat not captured by fixed upstream arrays; simultaneously, Group B fish with any Entiat detection are credited in recognition that successfully navigating back past Wells Dam already constitutes the key natal homing behavior. The ENL directionality sensitivity (C4, OR = 0.462--0.578) provides an upper bound by crediting five Group A fall-entry fish whose antenna detection sequences show upstream entry into the unmonitored lower reach.
 
-A particularly notable feature of the updated dataset is that all 181 Group B fish are fall returners. This completely eliminates seasonal detection efficiency as a plausible confound: Group B fish enter the Entiat (or fail to) during the fall high-discharge period when ENL detection efficiency is at its highest, not during spring low-efficiency conditions. The group gap of 21.7 percentage points is thus entirely attributable to the 68.0% vs. 89.7% fall return rates.
+The most conservative point of the credible interval range across all 12 model-criterion combinations is OR = 0.578 (C4 standard), meaning that even under the most generous treatment of Group A return success, Group B fish have approximately 42% lower odds of Entiat return than Group A.
 
-The detection-corrected model confirms this: both groups have nearly identical mean ENL detection efficiency (~0.85), and correcting for detection imperfection amplifies rather than attenuates the inferred Wells effect (OR narrows from 0.260 to 0.160). This pattern---detection correction strengthening rather than weakening an effect---is the expected result when undetected fish in the higher-return group are relatively more likely to be missed returners.
+## Seasonal Structure of the Wells Effect
+
+The majority of Group B fish that returned to the Entiat did so in spring: 104 of 122 detected Group B fish (85.2%) first entered the Entiat in January--June, after overwintering somewhere between Wells Dam and the Entiat River mouth. This pattern is biologically expected for Columbia Basin summer steelhead, which complete their upstream migration and hold until spring when temperature and flow conditions are suitable for spawning. The fact that most Group B fish did eventually return---just on a delayed spring schedule---indicates that Wells Dam overshoot does not uniformly preclude natal return; rather, it substantially increases the probability of complete failure to return. The Wells effect on C1 detection is therefore concentrated entirely among fish that failed to return at all (32.6% non-return in Group B vs. 10.3% in Group A), rather than among those that returned successfully but in a different season.
+
+The detection-corrected model confirms that differential ENL detection efficiency is not a primary driver of the group difference: both groups have nearly identical mean ENL detection efficiency (~0.85), and correcting for detection imperfection amplifies rather than attenuates the inferred Wells effect (OR from 0.260 to 0.131). The C2--C4 outcomes, which require upstream passage confirmation and can show failures even among detected fish, provide the most interpretable test of the Wells effect on spring returners specifically; the negative Wells effect is large and highly credible across all three of those criteria.
 
 ## Potential Mechanisms for Reduced Return
 
@@ -325,7 +351,7 @@ The mechanisms underlying the reduced Entiat return rate in Group B fish cannot 
 
 - **Overwinter or en-route mortality:** Fish holding in the reservoir above Wells Dam or in transit between Wells and the Entiat may experience energetic depletion, thermal stress, predation, or other mortality. Keefer et al. (2008) documented variable overwinter survival of reservoir-holding steelhead populations, with some groups experiencing substantial loss.
 
-- **Detection gaps in the Entiat River:** Group B fish not detected at ENL or other Entiat antennas may have entered the river but passed undetected. Formal correction via compound Bernoulli likelihood (Model 1c) yielded OR = 0.160, indicating the true return rate differential is likely larger than the observed rates suggest.
+- **Detection gaps in the Entiat River:** Group B fish not detected at ENL or other Entiat antennas may have entered the river but passed undetected. Formal correction via compound Bernoulli likelihood (Model 1c) yielded OR = 0.131, indicating the true return rate differential is likely larger than the observed rates suggest.
 
 - **Harvest:** Annual harvest status had no credible effect in our model (OR = 0.55; 95% CI broadly spanning 1.0; P(β < 0) = 0.927). This is consistent with mark-selective fisheries targeting adipose-clipped hatchery fish having limited direct mortality on unmarked wild individuals.
 
@@ -337,7 +363,7 @@ A positive spill association is biologically plausible: higher spill volumes inc
 
 ### ENL Entry Prior to Wells Detection
 
-Three Group B fish (return years 2011, 2014, 2015) were detected at ENL in fall before their Wells Dam detection, with intervals of 2--17 days between the two events. This pattern suggests these fish made a brief probe of the Entiat River confluence before continuing upstream to Wells Dam, a behavior consistent with exploratory movement near natal tributary junctions documented in other salmonid overshoot studies (Keefer and Caudill 2014). All three were subsequently detected at Wells Dam and are correctly classified as Group B. Their brief ENL entry did not constitute a return to the natal subbasin under either the original or strict outcome criteria.
+Three Group B fish (return years 2011, 2014, 2015) were detected at ENL in fall before their Wells Dam detection, with intervals of 2--17 days between the two events. This pattern suggests these fish made a brief probe of the Entiat River confluence before continuing upstream to Wells Dam, a behavior consistent with exploratory movement near natal tributary junctions documented in other salmonid overshoot studies (Keefer and Caudill 2014). All three were subsequently detected at Wells Dam and are correctly classified as Group B. Their brief ENL entry did not constitute a return to the natal subbasin under any of the four outcome criteria.
 
 ## Year-to-Year Variation
 
@@ -345,7 +371,7 @@ The substantial year random effects (σ ≈ 0.55) indicate that factors not meas
 
 ## Conclusions
 
-This study provides a formal quantitative evaluation of the effect of Wells Dam overshoot on wild Entiat steelhead natal return probability. Wild Entiat steelhead that interact with Wells Dam have approximately 74% lower odds of being subsequently detected in the Entiat River compared to fish that did not overshoot to Wells (OR = 0.260; P(β < 0) = 1.000). A compound-detection-likelihood model yielded an even stronger estimate (OR = 0.160; P(β < 0) = 1.000). A strict spawning outcome requiring detection at documented spawning habitat yielded OR = 0.485--0.553, representing a lower bound on the true effect. This effect is robust to detection efficiency considerations---reinforced by the fact that all Group B fish are fall returners when ENL detection efficiency is highest---and consistent across dam operating conditions. Annual harvest status showed no credible effect. Fall spill hours at Wells Dam showed a suggestive positive association with Group B return rates (OR = 1.33; P(β > 0) = 0.938) but the credible interval spans zero; this trend warrants continued monitoring. Three Group B fish made brief ENL entries before their Wells Dam detections (2--17 days), suggesting confluence-probing behavior prior to continued upstream movement. Additional telemetry-based research targeting wild Entiat-origin steelhead above Wells Dam would help discriminate among the biological mechanisms---stray behavior, passage mortality, overwinter attrition, and detection gaps---that collectively underlie the observed reduction in natal return.
+This study provides a formal quantitative evaluation of the effect of Wells Dam overshoot on wild Entiat steelhead natal return probability. Wild Entiat steelhead that interact with Wells Dam have approximately 74% lower odds of being subsequently detected in the Entiat River compared to fish that did not overshoot to Wells (OR = 0.260; P(β < 0) = 1.000). A compound-detection-likelihood model yielded an even stronger estimate (OR = 0.131; P(β < 0) = 0.999). Across four successive outcome criteria and both standard and detection-corrected model specifications, P(β < 0) ranged from 0.994 to 1.000 and all 95% credible intervals excluded zero except under the most conservative single specification. This effect is robust to detection efficiency considerations---both groups have nearly identical mean ENL detection efficiency (~0.85), and detection correction strengthens rather than weakens the estimated effect---and consistent across dam operating conditions. Of 181 Group B fish, 104 (57.5%) did eventually return to the Entiat but only after overwintering, entering in spring; the Wells effect on C1 detection is concentrated entirely among fish that failed to return (32.6% non-return in Group B vs. 10.3% in Group A). Annual harvest status showed no credible effect. Fall spill hours at Wells Dam showed a suggestive positive association with Group B return rates (OR = 1.33; P(β > 0) = 0.938) but the credible interval spans zero; this trend warrants continued monitoring. Three Group B fish made brief ENL entries before their Wells Dam detections (2--17 days), suggesting confluence-probing behavior prior to continued upstream movement. Additional telemetry-based research targeting wild Entiat-origin steelhead above Wells Dam would help discriminate among the biological mechanisms---stray behavior, passage mortality, overwinter attrition, and detection gaps---that collectively underlie the observed reduction in natal return.
 
 # References
 

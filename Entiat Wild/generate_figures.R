@@ -39,13 +39,15 @@ pA <- ggplot(annual, aes(x = ReturnYear, y = pct, fill = Harvest)) +
        title = "A. Annual Entiat return rate") +
   theme_ms
 
-# Panel B: Detection rate by group and season
-season_grp <- d %>%
-  group_by(group, ReturnSeason) %>%
+# Panel B: Detection rate by group and actual Entiat entry season
+# spring_entry = 1 if first ENL/upstream detection in Jan-Jun, 0 otherwise
+season_grp <- fish_clean %>%
+  mutate(ActualSeason = if_else(spring_entry == 1L, "Spring", "Fall")) %>%
+  group_by(group, ActualSeason) %>%
   summarise(n = n(), pct = mean(EntiatDetected) * 100, .groups = "drop") %>%
   mutate(label = sprintf("%d%%\n(n=%d)", round(pct), n))
 
-pB <- ggplot(season_grp, aes(x = ReturnSeason, y = pct, fill = group)) +
+pB <- ggplot(season_grp, aes(x = ActualSeason, y = pct, fill = group)) +
   geom_col(position = position_dodge(0.7), width = 0.6) +
   geom_text(aes(label = label), position = position_dodge(0.7),
             vjust = -0.3, size = 3) +

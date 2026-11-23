@@ -39,8 +39,21 @@ raw_main <- read_csv("EntiatWildSteel.csv", show_col_types = FALSE) %>%
   mutate(first_dt     = mdy_hm(`First Time Value`),
          release_date = mdy(`Release Date MMDDYYYY`))
 
-load("entiat_cleaned_strict_models.RData")   # fish_clean, bad_tags
+load("entiat_cleaned_strict_models.RData")   # fish_clean, bad_tags, season_means
 load("gateway_bayesian_models.RData")        # fit_enl, flow_enl, entiat
+
+# season_means (yr x season mean p_enl) loaded from entiat_cleaned_strict_models.RData
+overall_spring_p <- mean(season_means$mean_p_enl[season_means$season == "spring"])
+overall_fall_p   <- mean(season_means$mean_p_enl[season_means$season == "fall"])
+
+get_seasonal_p_enl <- function(return_year, season) {
+  val <- season_means %>%
+    filter(yr == return_year, season == !!season) %>%
+    pull(mean_p_enl)
+  if (length(val) == 0 || is.na(val))
+    return(if (season == "spring") overall_spring_p else overall_fall_p)
+  val
+}
 
 entiat_sites <- c("ENL - Lower Entiat River","ENM - Middle Entiat River",
                   "ENA - Upper Entiat River at rkm 17.1",
@@ -141,8 +154,21 @@ reclassify_results <- map_dfr(fish_clean$TagCode, function(tc) {
     ref_date <- as.Date(min(up_in$first_dt))
   }
 
-  p_enl_new <- predict_p_enl_at_date(ref_date, fm$ReturnYear)
-  if (is.na(p_enl_new)) p_enl_new <- fm$p_enl_corrected
+  # Compound detection: fish with both fall and spring ENL crossings made two
+  # separate entry attempts → p_detect = 1 - (1-p_fall)(1-p_spring)
+  enl_fall_dts <- enl_in$first_dt[month(enl_in$first_dt) %in% 7:12]
+  has_fall_enl <- length(enl_fall_dts) > 0
+
+  if (spring_enl && has_fall_enl) {
+    p_fall   <- predict_p_enl_at_date(as.Date(min(enl_fall_dts)), fm$ReturnYear)
+    p_spring <- predict_p_enl_at_date(ref_date, fm$ReturnYear)
+    if (is.na(p_fall))   p_fall   <- get_seasonal_p_enl(fm$ReturnYear, "fall")
+    if (is.na(p_spring)) p_spring <- get_seasonal_p_enl(fm$ReturnYear, "spring")
+    p_enl_new <- 1 - (1 - p_fall) * (1 - p_spring)
+  } else {
+    p_enl_new <- predict_p_enl_at_date(ref_date, fm$ReturnYear)
+    if (is.na(p_enl_new)) p_enl_new <- fm$p_enl_corrected
+  }
 
   tibble(TagCode = tc,
          spring_return_r   = as.integer(is_spring_migrant),
